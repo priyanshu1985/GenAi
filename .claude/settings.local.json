@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(del tailwind.config.js postcss.config.js)"
+    ]
+  }
+}
