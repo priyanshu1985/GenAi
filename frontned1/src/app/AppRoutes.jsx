@@ -1,14 +1,18 @@
+import React from "react";
 import { Routes, Route } from "react-router-dom";
+
+import HomePage from "../pages/HomePage";
+import ChildDashboard from "../pages/ChildDashboard";
+import WorkerDashboard from "../pages/WorkerDashboard";
+import AdminDashboard from "../pages/AdminDashboard";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Add your routes here */}
-      <Route path="/" element={<div>Welcome to the Buildathon App!</div>} />
-      {/* Example: 
-      <Route path="/about" element={<About />} />
-      <Route path="/contact" element={<Contact />} />
-      */}
+      <Route path="/" element={<HomePage />} />
+      <Route path="/child" element={<ChildDashboard />} />
+      <Route path="/worker" element={<WorkerDashboard />} />
+      <Route path="/admin" element={<AdminDashboard />} />
     </Routes>
   );
 };

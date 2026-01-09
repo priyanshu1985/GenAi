@@ -1,0 +1,34 @@
+/* -------- Global Reset -------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* -------- Body -------- */
+body {
+  font-family: "Comic Sans MS", "Poppins", sans-serif;
+  background-color: #fffaf0;
+  color: #333;
+}
+
+/* -------- Buttons -------- */
+button {
+  font-family: inherit;
+}
+
+/* -------- Headings -------- */
+h1, h2, h3 {
+  color: #333;
+}
+
+/* -------- Kid Friendly Animations -------- */
+button:hover {
+  transform: scale(1.05);
+  transition: 0.2s ease-in-out;
+}
+
+/* -------- Cards -------- */
+.card {
+  border-radius: 20px;
+}

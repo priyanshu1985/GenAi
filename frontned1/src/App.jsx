@@ -2,16 +2,17 @@ import { BrowserRouter } from "react-router-dom";
 import AppRoutes from "./app/AppRoutes";
 import { LayoutProvider } from "./context/LayoutContext";
 import { AuthProvider } from "./context/AuthContext";
+import Navbar from "./components/Navbar";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <LayoutProvider>
+    <AuthProvider>
+      <LayoutProvider>
+        <BrowserRouter>
           <AppRoutes />
-        </LayoutProvider>
-      </AuthProvider>
-    </BrowserRouter>
+        </BrowserRouter>
+      </LayoutProvider>
+    </AuthProvider>
   );
 };
 
