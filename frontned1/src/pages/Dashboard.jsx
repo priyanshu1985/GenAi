@@ -27,14 +27,20 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const handleCardClick = (title) => {
-    if (title === "Games") {
-      navigate("/games");
-    } else if (title === "Shapes") {
-      navigate("/shapes");
-    } else if (title === "Colors") {
-      navigate("/colors");
-    }
-  };
+  if (title === "Alphabet") {
+    navigate("/alphabet");
+  } else if (title === "Numbers") {
+    navigate("/numbers");
+  }
+   else if (title === "Games") {
+    navigate("/games");
+  } else if (title === "Shapes") {
+    navigate("/shapes");
+  } else if (title === "Colors") {
+    navigate("/colors");
+  }
+};
+
 
   return (
     <div className="dashboard-container">

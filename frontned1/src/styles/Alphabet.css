@@ -1,0 +1,59 @@
+.alphabet-page {
+  background-color: #f0faff;
+  background-image: radial-gradient(#d1e9ff 2px, transparent 2px);
+  background-size: 30px 30px;
+  min-height: 100vh;
+  padding: 30px;
+  font-family: "Fredoka", sans-serif;
+}
+
+.alphabet-title {
+  text-align: center;
+  font-size: 3rem;
+}
+
+.alphabet-subtitle {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #555;
+}
+
+.alphabet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 20px;
+}
+
+.alphabet-card {
+  background: white;
+  border-radius: 25px;
+  padding: 20px;
+  border: 3px solid #e1f0ff;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.alphabet-card:hover {
+  transform: translateY(4px);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.08);
+}
+
+.alphabet-card.active {
+  background: #4d96ff;
+  color: white;
+}
+
+.alphabet-letter {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.alphabet-emoji {
+  font-size: 2rem;
+  margin: 8px 0;
+}
+
+.alphabet-word {
+  font-size: 1.2rem;
+}

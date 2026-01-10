@@ -4,6 +4,10 @@ import GamifiedLearning from "../pages/GamifiedLearning";
 import ColorsLearning from "../pages/ColorsLearning";
 import WorkerDashboard from "../pages/WorkerDashboard";
 import AdminDashboard from "../pages/AdminDashboard";
+import AlphabetLearning from "../pages/Alphabet"; //
+import NumbersLearning from "../pages/Numbers";
+
+
 
 const AppRoutes = () => {
   return (
@@ -16,7 +20,8 @@ const AppRoutes = () => {
 
       {/* Colors Learning */}
       <Route path="/colors" element={<ColorsLearning />} />
-
+       <Route path="/alphabet" element={<AlphabetLearning />} />
+       <Route path="/numbers" element={<NumbersLearning />} />
       {/* Other dashboards */}
       <Route path="/worker" element={<WorkerDashboard />} />
       <Route path="/admin" element={<AdminDashboard />} />
