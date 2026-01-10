@@ -1,0 +1,125 @@
+{
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "कुछ गलत हुआ है",
+    "success": "सफलता!",
+    "cancel": "रद्द करें",
+    "save": "सेव करें",
+    "delete": "मिटाएं",
+    "edit": "संपादित करें",
+    "close": "बंद करें",
+    "submit": "जमा करें",
+    "search": "खोजें",
+    "back": "वापस",
+    "next": "आगे",
+    "previous": "पिछला"
+  },
+  "nav": {
+    "home": "होम",
+    "dashboard": "डैशबोर्ड",
+    "profile": "प्रोफाइल",
+    "settings": "सेटिंग्स",
+    "logout": "लॉग आउट",
+    "login": "लॉग इन"
+  },
+  "navigation": {
+    "learn": "सीखें",
+    "dashboard": "डैशबोर्ड",
+    "admin": "एडमिन"
+  },
+  "language": {
+    "select": "भाषा चुनें",
+    "english": "English",
+    "hindi": "हिंदी",
+    "telugu": "తెలుగు",
+    "changed": "भाषा सफलतापूर्वक बदल गई!"
+  },
+  "auth": {
+    "welcome": "लर्निंग असिस्टेंट में आपका स्वागत है",
+    "login": "लॉग इन",
+    "logout": "लॉग आउट",
+    "getStarted": "शुरू करें",
+    "register": "रजिस्टर करें",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "confirmPassword": "पासवर्ड कन्फर्म करें",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "loginSuccess": "लॉग इन सफल!",
+    "loginError": "लॉग इन असफल। कृपया फिर से कोशिश करें।"
+  },
+  "dashboard": {
+    "title": "डैशबोर्ड",
+    "welcome": "नमस्ते, {{name}}!",
+    "subtitle": "आज आप क्या सीखना चाहेंगे?",
+    "alphabet": "अक्षर",
+    "numbers": "संख्या",
+    "colors": "रंग",
+    "shapes": "आकार",
+    "rhymes": "तुकबंदी",
+    "games": "खेल",
+    "progress": "{{progress}}% पूरा",
+    "streak": "{{days}} दिन की लकीर",
+    "xp": "{{xp}} XP",
+    "level": "लेवल {{level}}",
+    "aiAssistant": "मुझसे बात करें",
+    "stats": "आंकड़े",
+    "recentActivity": "हाल की गतिविधि",
+    "quickActions": "त्वरित कार्य"
+  },
+  "worker": {
+    "title": "कार्यकर्ता डैशबोर्ड",
+    "children": "बच्चे",
+    "addChild": "नया बच्चा जोड़ें",
+    "viewChildren": "सभी बच्चे देखें",
+    "totalChildren": "कुल बच्चे",
+    "activeToday": "आज सक्रिय",
+    "learningProgress": "सीखने की प्रगति",
+    "manageActivities": "गतिविधियां प्रबंधित करें"
+  },
+  "child": {
+    "title": "बच्चे का डैशबोर्ड",
+    "startLearning": "सीखना शुरू करें",
+    "voiceAssistant": "टीचर से बात करें",
+    "learningGames": "सीखने के गेम",
+    "myProgress": "मेरी प्रगति",
+    "stars": "अर्जित सितारे",
+    "badges": "बैज",
+    "streak": "सीखने की लकीर",
+    "askQuestion": "कोई सवाल पूछें",
+    "listening": "सुन रहा हूं...",
+    "speaking": "टीचर बोल रहा है..."
+  },
+  "admin": {
+    "title": "एडमिन डैशबोर्ड",
+    "users": "उपयोगकर्ता",
+    "workers": "कार्यकर्ता",
+    "children": "बच्चे",
+    "reports": "रिपोर्ट",
+    "analytics": "विश्लेषण",
+    "systemHealth": "सिस्टम स्वास्थ्य"
+  },
+  "learning": {
+    "colors": "रंग",
+    "numbers": "संख्याएं",
+    "animals": "जानवर",
+    "shapes": "आकार",
+    "alphabets": "अक्षर",
+    "fruits": "फल",
+    "completed": "पूरा हुआ!",
+    "inProgress": "चालू है",
+    "notStarted": "शुरू नहीं हुआ",
+    "difficulty": "कठिनाई",
+    "easy": "आसान",
+    "medium": "मध्यम",
+    "hard": "कठिन"
+  },
+  "ai": {
+    "askMe": "मुझसे कुछ भी पूछें!",
+    "thinking": "टीचर सोच रहा है...",
+    "errorMessage": "माफ करना, मैं समझ नहीं सका। क्या फिर से पूछ सकते हो?",
+    "tryAgain": "फिर से कोशिश करें",
+    "microphoneError": "माइक्रोफोन उपलब्ध नहीं है",
+    "recordingError": "रिकॉर्डिंग असफल",
+    "playbackError": "प्लेबैक असफल"
+  }
+}

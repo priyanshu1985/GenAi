@@ -4,6 +4,9 @@ import App from "./App.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
+// Initialize i18n for multi-language support
+import "./i18n";
+
 // Add FontAwesome for icons
 const fontAwesome = document.createElement("link");
 fontAwesome.rel = "stylesheet";

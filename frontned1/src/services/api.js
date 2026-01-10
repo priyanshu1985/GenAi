@@ -1,13 +1,18 @@
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
-// Helper to get auth headers
+// Helper to get auth headers with language support
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
-  return token ? { Authorization: `Bearer ${token}` } : {};
+  const language = localStorage.getItem("selectedLanguage") || "hi";
+
+  return {
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    "Accept-Language": language,
+  };
 };
 
-// Generic API request handler
+// Generic API request handler with language support
 async function apiRequest(endpoint, options = {}) {
   const url = `${API_BASE_URL}${endpoint}`;
 
@@ -19,6 +24,12 @@ async function apiRequest(endpoint, options = {}) {
       ...options.headers,
     },
   };
+
+  console.log(
+    `🌐 API Request: ${endpoint} with language: ${
+      getAuthHeaders()["Accept-Language"]
+    }`
+  );
 
   const response = await fetch(url, config);
 
@@ -35,18 +46,18 @@ async function apiRequest(endpoint, options = {}) {
 // Auth API
 export const authAPI = {
   login: (email, password) =>
-    apiRequest("/auth/login", {
+    apiRequest("/api/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
     }),
 
   signup: ({ email, password, role, name }) =>
-    apiRequest("/auth/signup", {
+    apiRequest("/api/auth/signup", {
       method: "POST",
       body: JSON.stringify({ email, password, role, name }),
     }),
 
-  getCurrentUser: () => apiRequest("/auth/me"),
+  getCurrentUser: () => apiRequest("/api/auth/me"),
 };
 
 // User API (role-based endpoints)
@@ -72,7 +83,7 @@ export const aiAPI = {
     const startTime = Date.now();
 
     try {
-      const response = await fetch(`${API_BASE_URL}/ai/interact`, {
+      const response = await fetch(`${API_BASE_URL}/api/ai/interact`, {
         method: "POST",
         headers: getAuthHeaders(),
         body: formData,
@@ -108,9 +119,14 @@ export const aiAPI = {
     }
   },
 
-  // Text-only interaction (no audio) - using new method name for Web Speech API
-  interactWithText: async (text, childId) => {
+  // Text-only interaction with language support
+  interactWithText: async (text, childId, language = null) => {
     console.log("💬 TEXT API: Sending...", `"${text}"`);
+
+    // Get current language if not provided
+    const targetLanguage =
+      language || localStorage.getItem("selectedLanguage") || "hi";
+    console.log("🌐 Using language:", targetLanguage);
 
     const startTime = Date.now();
 
@@ -121,7 +137,11 @@ export const aiAPI = {
           "Content-Type": "application/json",
           ...getAuthHeaders(),
         },
-        body: JSON.stringify({ text, child_id: childId }),
+        body: JSON.stringify({
+          text,
+          child_id: childId,
+          language: targetLanguage,
+        }),
       });
 
       const timeMs = Date.now() - startTime;
@@ -205,19 +225,19 @@ export const aiAPI = {
 
   // Post greeting request
   postGreeting: (childId) =>
-    apiRequest("/ai/greeting", {
+    apiRequest("/api/ai/greeting", {
       method: "POST",
       body: JSON.stringify({ child_id: childId }),
     }),
 
   // Get all children profiles
-  getChildren: () => apiRequest("/ai/children"),
+  getChildren: () => apiRequest("/api/ai/children"),
 
   // Get specific child profile
-  getChild: (childId) => apiRequest(`/ai/child/${childId}`),
+  getChild: (childId) => apiRequest(`/api/ai/child/${childId}`),
 
   // Health check
-  health: () => apiRequest("/ai/health"),
+  health: () => apiRequest("/api/ai/health"),
 };
 
 // Health check

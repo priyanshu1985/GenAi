@@ -1,0 +1,125 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "success": "Success!",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "submit": "Submit",
+    "search": "Search",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout",
+    "login": "Login"
+  },
+  "navigation": {
+    "learn": "Learn",
+    "dashboard": "Dashboard",
+    "admin": "Admin"
+  },
+  "language": {
+    "select": "Select Language",
+    "english": "English",
+    "hindi": "हिंदी",
+    "telugu": "తెలుగు",
+    "changed": "Language changed successfully!"
+  },
+  "auth": {
+    "welcome": "Welcome to Learning Assistant",
+    "login": "Login",
+    "logout": "Logout",
+    "getStarted": "Get Started",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "loginSuccess": "Login successful!",
+    "loginError": "Login failed. Please try again."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Hi, {{name}}!",
+    "subtitle": "What would you like to learn today?",
+    "alphabet": "Alphabet",
+    "numbers": "Numbers",
+    "colors": "Colors",
+    "shapes": "Shapes",
+    "rhymes": "Rhymes",
+    "games": "Games",
+    "progress": "{{progress}}% complete",
+    "streak": "{{days}} Day Streak",
+    "xp": "{{xp}} XP",
+    "level": "Level {{level}}",
+    "aiAssistant": "Talk to me",
+    "stats": "Statistics",
+    "recentActivity": "Recent Activity",
+    "quickActions": "Quick Actions"
+  },
+  "worker": {
+    "title": "Worker Dashboard",
+    "children": "Children",
+    "addChild": "Add New Child",
+    "viewChildren": "View All Children",
+    "totalChildren": "Total Children",
+    "activeToday": "Active Today",
+    "learningProgress": "Learning Progress",
+    "manageActivities": "Manage Activities"
+  },
+  "child": {
+    "title": "Child Dashboard",
+    "startLearning": "Start Learning",
+    "voiceAssistant": "Talk to Teacher",
+    "learningGames": "Learning Games",
+    "myProgress": "My Progress",
+    "stars": "Stars Earned",
+    "badges": "Badges",
+    "streak": "Learning Streak",
+    "askQuestion": "Ask a question",
+    "listening": "Listening...",
+    "speaking": "Teacher is speaking..."
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "users": "Users",
+    "workers": "Workers",
+    "children": "Children",
+    "reports": "Reports",
+    "analytics": "Analytics",
+    "systemHealth": "System Health"
+  },
+  "learning": {
+    "colors": "Colors",
+    "numbers": "Numbers",
+    "animals": "Animals",
+    "shapes": "Shapes",
+    "alphabets": "Alphabets",
+    "fruits": "Fruits",
+    "completed": "Completed!",
+    "inProgress": "In Progress",
+    "notStarted": "Not Started",
+    "difficulty": "Difficulty",
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard"
+  },
+  "ai": {
+    "askMe": "Ask me anything!",
+    "thinking": "Teacher is thinking...",
+    "errorMessage": "Sorry, I couldn't understand. Can you ask again?",
+    "tryAgain": "Try Again",
+    "microphoneError": "Microphone not available",
+    "recordingError": "Recording failed",
+    "playbackError": "Playback failed"
+  }
+}

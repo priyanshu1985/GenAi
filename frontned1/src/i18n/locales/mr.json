@@ -1,0 +1,126 @@
+{
+  "common": {
+    "loading": "लोड होत आहे...",
+    "error": "काहीतरी चूक झाली",
+    "success": "यश!",
+    "cancel": "रद्द करा",
+    "save": "सेव्ह करा",
+    "delete": "डिलीट करा",
+    "edit": "संपादन",
+    "close": "बंद करा",
+    "submit": "सबमिट करा",
+    "search": "शोधा",
+    "back": "परत",
+    "next": "पुढे",
+    "previous": "मागे"
+  },
+  "nav": {
+    "home": "होम",
+    "dashboard": "डॅशबोर्ड",
+    "profile": "प्रोफाइल",
+    "settings": "सेटिंग्स",
+    "logout": "लॉग आउट",
+    "login": "लॉग इन"
+  },
+  "navigation": {
+    "learn": "शिका",
+    "dashboard": "डॅशबोर्ड",
+    "admin": "अॅडमिन"
+  },
+  "language": {
+    "select": "भाषा निवडा",
+    "current": "सद्य भाषा",
+    "hindi": "हिंदी",
+    "english": "इंग्रजी",
+    "telugu": "तेलुगू",
+    "marathi": "मराठी"
+  },
+  "auth": {
+    "login": "लॉग इन",
+    "signup": "साइन अप",
+    "logout": "लॉग आउट",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "confirmPassword": "पासवर्ड पुष्टी",
+    "name": "नाव",
+    "role": "भूमिका",
+    "parent": "पालक",
+    "teacher": "शिक्षक", 
+    "admin": "अॅडमिन",
+    "getStarted": "सुरुवात करा",
+    "forgotPassword": "पासवर्ड विसरला?",
+    "rememberMe": "मला लक्षात ठेवा",
+    "alreadyHaveAccount": "आधीच खाते आहे?",
+    "dontHaveAccount": "खाते नाही?",
+    "createAccount": "खाते तयार करा"
+  },
+  "dashboard": {
+    "welcome": "स्वागत",
+    "myProgress": "माझी प्रगती",
+    "alphabet": "अक्षरमाळा",
+    "numbers": "संख्या",
+    "colors": "रंग",
+    "shapes": "आकार",
+    "music": "संगीत",
+    "games": "खेळ",
+    "stories": "कथा",
+    "drawing": "चित्रकला",
+    "completed": "पूर्ण",
+    "inProgress": "चालू आहे",
+    "locked": "लॉक आहे",
+    "startLearning": "शिकण्यास सुरुवात करा",
+    "continue": "पुढे चला",
+    "achievements": "उपलब्धी",
+    "streak": "सलग दिवस",
+    "points": "गुण",
+    "level": "पातळी"
+  },
+  "profile": {
+    "myProfile": "माझे प्रोफाइल",
+    "editProfile": "प्रोफाइल संपादन",
+    "personalInfo": "व्यक्तिगत माहिती",
+    "preferences": "प्राधान्ये",
+    "statistics": "आकडेवारी",
+    "changePassword": "पासवर्ड बदला",
+    "deleteAccount": "खाते डिलीट करा"
+  },
+  "learning": {
+    "lesson": "धडा",
+    "practice": "सराव",
+    "quiz": "प्रश्नमंजुषा", 
+    "review": "पुनरावलोकन",
+    "hint": "सूचना",
+    "tryAgain": "पुन्हा प्रयत्न करा",
+    "wellDone": "छान!",
+    "excellent": "उत्तम!",
+    "keepGoing": "चालू ठेवा!"
+  },
+  "ai": {
+    "listening": "ऐकत आहे...",
+    "processing": "प्रक्रिया करत आहे...",
+    "speaking": "बोलत आहे...",
+    "tapToTalk": "बोलण्यासाठी टॅप करा",
+    "voiceSupport": "आवाज समर्थन",
+    "textInput": "मजकूर लिहा"
+  },
+  "admin": {
+    "dashboard": "अॅडमिन डॅशबोर्ड",
+    "users": "वापरकर्ते",
+    "content": "सामग्री",
+    "analytics": "विश्लेषण",
+    "settings": "सेटिंग्स",
+    "reports": "अहवाल"
+  },
+  "parent": {
+    "childProgress": "मुलाची प्रगती",
+    "weeklyReport": "साप्ताहिक अहवाल",
+    "learningPath": "शिकण्याचा मार्ग",
+    "timeSpent": "खर्च केलेला वेळ"
+  },
+  "teacher": {
+    "classroom": "वर्गखोली",
+    "students": "विद्यार्थी",
+    "assignments": "कार्य",
+    "gradebook": "गुणपत्रिका"
+  }
+}
