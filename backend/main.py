@@ -30,6 +30,12 @@ except ImportError as e:
     print(f"Import error for language routes: {e}")
     language_router = None
 
+try:
+    from routes.video_routes import router as video_router
+except ImportError as e:
+    print(f"Import error for video routes: {e}")
+    video_router = None
+
 app = FastAPI(title="Buildathon Backend - Multi-Language", version="1.0.0")
 
 # Add CORS middleware
@@ -69,3 +75,8 @@ if language_router:
     app.include_router(language_router, prefix="/api")
 else:
     print("Warning: Could not load language routes")
+
+if video_router:
+    app.include_router(video_router, prefix="/api")
+else:
+    print("Warning: Could not load video routes")
