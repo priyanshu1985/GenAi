@@ -1,22 +1,23 @@
-import React from "react";
+import "../styles/Footer.css";
 
 const Footer = () => {
   return (
-    <footer style={footer}>
-      <p>© 2026 Anganwadi AI Learning Assistant</p>
-      <p>Voice-first • Multilingual • Offline-first</p>
+    <footer className="footer-container">
+      <div className="footer-content">
+        <div className="footer-brand">
+          <span className="footer-logo">🦉</span>
+          <span className="footer-name">SikshaAI</span>
+        </div>
+        <p className="footer-tagline">Making learning fun for every child</p>
+        <div className="footer-features">
+          <span className="feature-tag">🎤 Voice-first</span>
+          <span className="feature-tag">🌍 Multilingual</span>
+          <span className="feature-tag">📱 Offline-ready</span>
+        </div>
+        <p className="footer-copyright">© 2026 SikshaAI Learning Assistant</p>
+      </div>
     </footer>
   );
-};
-
-/* -------- Styles -------- */
-
-const footer = {
-  textAlign: "center",
-  padding: "1rem",
-  backgroundColor: "#F1F1F1",
-  marginTop: "2rem",
-  fontSize: "0.9rem",
 };
 
 export default Footer;

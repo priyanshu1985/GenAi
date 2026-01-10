@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { authAPI } from "../services/api";
 
 const AuthContext = createContext();
 
@@ -18,15 +19,33 @@ export const AuthProvider = ({ children }) => {
     // Check if user is logged in on app start
     const token = localStorage.getItem("token");
     if (token) {
-      // You can add token validation logic here
-      setUser({ token });
+      // Validate token with backend
+      authAPI
+        .getCurrentUser()
+        .then((response) => {
+          // Handle response - backend returns { data: userData }
+          const userData = response?.data || response;
+          setUser({ ...userData, token });
+        })
+        .catch((error) => {
+          console.log("Token validation failed:", error);
+          // Token invalid, clear it
+          localStorage.removeItem("token");
+          setUser(null);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem("token", userData.token);
+    if (userData.token) {
+      localStorage.setItem("token", userData.token);
+    }
   };
 
   const logout = () => {
