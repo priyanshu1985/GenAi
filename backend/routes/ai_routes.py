@@ -1,9 +1,9 @@
 """
 AI Routes Module
-Defines API endpoints for AI-powered learning interactions.
+Defines API endpoints for AI-powered learning interactions with multi-language support.
 """
 
-from fastapi import APIRouter, UploadFile, File, Form, Depends, Header, HTTPException
+from fastapi import APIRouter, UploadFile, File, Form, Depends, Header, HTTPException, Request
 from typing import Optional
 from pydantic import BaseModel
 
@@ -17,6 +17,11 @@ from services.ai_service import (
     get_available_children
 )
 from utils import success, error
+from utils.language_utils import (
+    get_request_language_dependency,
+    create_language_aware_prompt,
+    LanguageMiddleware
+)
 
 router = APIRouter(prefix="/ai", tags=["AI"])
 
@@ -25,6 +30,7 @@ router = APIRouter(prefix="/ai", tags=["AI"])
 class TextInteractionRequest(BaseModel):
     text: str
     child_id: Optional[str] = None
+    language: Optional[str] = None  # Optional override for language
 
 
 class GreetingRequest(BaseModel):
@@ -97,13 +103,41 @@ async def ai_voice(
 # ============================================================
 
 @router.post("/text")
-async def text_interaction_endpoint(request: TextInteractionRequest):
+async def text_interaction_endpoint(
+    request_data: TextInteractionRequest,
+    http_request: Request,
+    language: str = Depends(get_request_language_dependency)
+):
     """
-    Text-only interaction (skips STT).
-    Useful for testing or text-based input.
+    Text-only interaction with multi-language support.
+    Language is detected from Accept-Language header or request body.
     """
     try:
-        result = process_text_interaction(request.text, request.child_id)
+        # Use language from request body if provided, otherwise use detected language
+        target_language = request_data.language or language
+        
+        # Log language information
+        LanguageMiddleware.log_language_info(http_request, target_language, "/ai/text")
+        
+        # Create language-aware prompt
+        enhanced_text = create_language_aware_prompt(
+            base_prompt=request_data.text,
+            language=target_language,
+            context="Child learning session at Anganwadi center"
+        )
+        
+        # Process with language context
+        result = process_text_interaction(
+            text=enhanced_text,
+            child_id=request_data.child_id,
+            language=target_language
+        )
+        
+        # Add language info to response
+        if isinstance(result, dict):
+            result["detected_language"] = target_language
+            result["original_text"] = request_data.text
+        
         return success(result)
     except Exception as e:
         print(f"Text interaction error: {str(e)}")

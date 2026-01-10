@@ -93,6 +93,18 @@ CHILD_PROFILES: Dict[str, ChildProfile] = {
         progress={"numbers": 90, "shapes": 85, "colors": 95, "hindi_words": 30},
         sessions_completed=30
     ),
+    
+    "child_006": ChildProfile(
+        child_id="child_006",
+        name="Arjun",
+        age=4,
+        preferred_language="marathi",
+        learning_level="beginner",
+        weak_areas=["letters", "words"],
+        strong_areas=["colors", "music"],
+        progress={"colors": 75, "music": 80, "letters": 35, "words": 20},
+        sessions_completed=8
+    ),
 }
 
 

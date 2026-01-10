@@ -24,7 +24,13 @@ except ImportError as e:
     print(f"Import error for auth routes: {e}")
     auth_router = None
 
-app = FastAPI(title="Buildathon Backend", version="1.0.0")
+try:
+    from routes.user_language_routes import router as language_router
+except ImportError as e:
+    print(f"Import error for language routes: {e}")
+    language_router = None
+
+app = FastAPI(title="Buildathon Backend - Multi-Language", version="1.0.0")
 
 # Add CORS middleware
 app.add_middleware(
@@ -36,24 +42,30 @@ app.add_middleware(
 )
 
 @app.get("/")
+@app.get("/")
 async def root():
-    return {"message": "Buildathon Backend API", "status": "running"}
+    return {"message": "Buildathon Backend API - Multi-Language", "status": "running", "supported_languages": ["hi", "en", "te", "mr"]}
 
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "message": "Backend is running properly"}
 
 if user_router:
-    app.include_router(user_router)
+    app.include_router(user_router, prefix="/api")
 else:
     print("Warning: Could not load user routes")
 
 if ai_router:
-    app.include_router(ai_router)
+    app.include_router(ai_router, prefix="/api")
 else:
     print("Warning: Could not load AI routes")
 
 if auth_router:
-    app.include_router(auth_router)
+    app.include_router(auth_router, prefix="/api")
 else:
     print("Warning: Could not load auth routes")
+
+if language_router:
+    app.include_router(language_router, prefix="/api")
+else:
+    print("Warning: Could not load language routes")

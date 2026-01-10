@@ -15,6 +15,7 @@ load_dotenv()
 # Language detection patterns
 LANGUAGE_PATTERNS = {
     "hindi": r'[\u0900-\u097F]',  # Devanagari script
+    "marathi": r'[\u0900-\u097F]',  # Devanagari script (same as Hindi)
     "tamil": r'[\u0B80-\u0BFF]',  # Tamil script
     "telugu": r'[\u0C00-\u0C7F]', # Telugu script
     "kannada": r'[\u0C80-\u0CFF]', # Kannada script
@@ -28,6 +29,10 @@ LANGUAGE_KEYWORDS = {
               "kya", "kaise", "kahan", "kab", "kaun", "main", "mujhe", "aap", "hai", "hain", 
               "ka", "ki", "ke", "sikhao", "batao", "namaste", "accha", "theek", "samjha",
               "kitna", "kitni", "time", "lagega", "naam", "tumhara", "mera", "ye", "wo", "ji"],
+    "marathi": ["काय", "कसे", "कुठे", "केव्हा", "कोण", "मी", "तू", "आहे", "आहेत", "च्या", "ची", "चे",
+               "kay", "kase", "kuthe", "kevha", "kon", "mi", "tu", "tujhe", "maze", "ahe", "ahet",
+               "cha", "chi", "che", "shikvun", "sang", "namaskar", "chaan", "thik", "samajle",
+               "kitna", "kitni", "vela", "naav", "tuze", "maze", "he", "te", "hoy"],
     "english": ["what", "how", "where", "when", "who", "i", "you", "is", "are", "the", "a", "an",
                 "me", "my", "your", "this", "that", "tell", "teach", "learn", "good", "nice"],
     "tamil": ["என்ன", "எப்படி", "எங்கே", "எப்போது", "யார்", "நான்", "நீ", "இருக்கு", "உள்ள"],
@@ -45,24 +50,26 @@ LLM_MODEL = "meta-llama/llama-3.2-3b-instruct"
 
 # Gamification Elements for Children (Age 2-6)
 CHILD_BADGES = {
-    "colors": {"emoji": "🎨", "name": "Color Expert", "hindi": "रंग एक्सपर्ट", "telugu": "రంగుల నిపుణుడు"},
-    "numbers": {"emoji": "🔢", "name": "Number Champion", "hindi": "नंबर चैंपियन", "telugu": "సంఖ్యల విజేత"},
-    "animals": {"emoji": "🐘", "name": "Animal Friend", "hindi": "जानवरों का दोस्त", "telugu": "జంతువుల మిత్రుడు"},
-    "alphabets": {"emoji": "📚", "name": "ABC Star", "hindi": "ABC स्टार", "telugu": "ABC స్టార్"},
-    "shapes": {"emoji": "🔷", "name": "Shape Master", "hindi": "शेप मास्टर", "telugu": "ఆకారాల మేధావి"},
-    "fruits": {"emoji": "🍎", "name": "Fruit Lover", "hindi": "फल प्रेमी", "telugu": "పండ్ల ప్రేమికుడు"}
+    "colors": {"emoji": "🎨", "name": "Color Expert", "hindi": "रंग एक्सपर्ट", "telugu": "రంగుల నిపుణుడు", "marathi": "रंग तज्ञ"},
+    "numbers": {"emoji": "🔢", "name": "Number Champion", "hindi": "नंबर चैंपियन", "telugu": "సంఖ్యల విజేత", "marathi": "नंबर चॅम्पियन"},
+    "animals": {"emoji": "🐘", "name": "Animal Friend", "hindi": "जानवरों का दोस्त", "telugu": "జంతువుల మిత్రుడు", "marathi": "प्राण्यांचा मित्र"},
+    "alphabets": {"emoji": "📚", "name": "ABC Star", "hindi": "ABC स्टार", "telugu": "ABC స్టార్", "marathi": "ABC स्टार"},
+    "shapes": {"emoji": "🔷", "name": "Shape Master", "hindi": "शेप मास्टर", "telugu": "ఆకారాల మేధావి", "marathi": "आकार मास्टर"},
+    "fruits": {"emoji": "🍎", "name": "Fruit Lover", "hindi": "फल प्रेमी", "telugu": "పండ్ల ప్రేమికుడు", "marathi": "फळांचा प्रेमी"}
 }
 
 CHILD_PRAISE_WORDS = {
     "english": ["Great job!", "Awesome!", "You're amazing!", "Super!", "Fantastic!", "Well done!"],
     "hindi": ["वाह!", "बहुत अच्छा!", "शाबाश!", "सुपर!", "कमाल!", "बहुत बढ़िया!"],
-    "telugu": ["వాహ్!", "చాలా బాగుంది!", "అద్భుతం!", "సూపర్!", "అవును!", "చాలా మంచి!"]
+    "telugu": ["వాహ్!", "చాలా బాగుంది!", "అద్భుతం!", "సూపర్!", "అవును!", "చాలా మంచి!"],
+    "marathi": ["वाह!", "खूप चांगले!", "शाब्बास!", "सुपर!", "छान!", "अप्रतिम!"]
 }
 
 FUN_ACTIONS = {
     "english": ["Clap clap!", "Jump jump!", "Dance dance!", "Hip hip hooray!", "High five!"],
     "hindi": ["ताली बजाओ!", "कूदो कूदो!", "नाचो नाचो!", "वाह वाह!", "हाई फाइव!"],
-    "telugu": ["చప్పట్లు కొట్టు!", "గంతులు వేయి!", "డాన్స్ చేయి!", "వాహ్ వాహ్!", "హై ఫైవ్!"]
+    "telugu": ["చప్పట్లు కొట్టు!", "గంతులు వేయి!", "డాన్స్ చేయి!", "వాహ్ వాహ్!", "హై ఫైవ్!"],
+    "marathi": ["टाळी वाजवा!", "उडी मारा!", "नाचा नाचा!", "वाह वाह!", "हाय फाइव्ह!"]
 }
 
 # Mock mode for testing

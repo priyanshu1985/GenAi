@@ -72,18 +72,26 @@ def process_interact(audio: bytes, child_id: str) -> dict:
     }
 
 
-def process_text_interaction(text: str, child_id: str = None) -> dict:
+def process_text_interaction(text: str, child_id: str = None, language: str = "hi") -> dict:
     """
-    Text-only interaction endpoint handler.
+    Text-only interaction endpoint handler with language support.
 
     Args:
-        text: Text input
+        text: Text input (may include language-aware prompt)
         child_id: Optional child ID
+        language: Target language for response
 
     Returns:
-        AI response with optional audio
+        AI response with language information
     """
-    return text_interaction(text, child_id)
+    # Pass language to the pipeline
+    result = text_interaction(text, child_id, language)
+    
+    # Ensure language information is included in result
+    if isinstance(result, dict):
+        result["language"] = language
+    
+    return result
 
 
 def get_session_greeting(child_id: str = None) -> dict:

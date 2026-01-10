@@ -141,40 +141,41 @@ def interact(
 
 def text_interaction(
     user_text: str,
-    child_id: Optional[str] = None
+    child_id: Optional[str] = None,
+    language: str = "hi"
 ) -> dict:
     """
-    Text-only interaction (skips STT step).
-    Useful for testing or text-based input.
+    Text-only interaction with language support.
+    Uses provided language instead of child profile language.
 
     Args:
-        user_text: Text input from the user
+        user_text: Text input from the user (may include language prompt)
         child_id: Optional child ID for personalization
+        language: Target language for AI response
 
     Returns:
-        Dictionary with AI response and optional audio
+        Dictionary with AI response and language information
     """
     print("=" * 50)
     print("PIPELINE: text_interaction started")
     print(f"Input text: '{user_text}'")
     print(f"Child ID: {child_id}")
+    print(f"Target language: {language}")
     
     # Load child profile
     child_profile = None
-    response_language = "hindi"  # Default
 
     if child_id:
         print(f"📋 Loading child profile for: {child_id}")
         child_profile = get_child_profile(child_id)
         if child_profile:
-            response_language = child_profile.preferred_language
-            print(f"✅ Child profile loaded: {child_profile.name}, language: {response_language}")
+            print(f"✅ Child profile loaded: {child_profile.name}")
         else:
             print(f"⚠️ No child profile found for: {child_id}")
     else:
         print("ℹ️ No child ID provided, using defaults")
 
-    # Generate LLM response
+    # Generate LLM response with language context
     print("\n--- STEP 1: LLM Generation ---")
     ai_text_response = generate_text(
         user_text=user_text,
@@ -183,11 +184,11 @@ def text_interaction(
     )
     print(f"AI response: '{ai_text_response}'")
 
-    # Generate audio
+    # Generate audio in target language
     print("\n--- STEP 2: TTS Generation ---")
     audio_response = text_to_speech(
         text=ai_text_response,
-        language=response_language,
+        language=language,  # Use provided language instead of profile language
         return_type="base64"
     )
     print(f"Audio response type: {audio_response.get('tts_type', 'unknown')}")
@@ -197,7 +198,8 @@ def text_interaction(
         "input_text": user_text,
         "ai_text_response": ai_text_response,
         "audio_response": audio_response,
-        "response_language": response_language
+        "language": language,  # Include language in response
+        "response_language": language  # For backward compatibility
     }
     
     print("\n--- PIPELINE COMPLETE ---")
