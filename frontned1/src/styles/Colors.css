@@ -1,114 +1,277 @@
-body {
+.colors-page {
+  width: 95%;                  /* almost full screen width */
+  max-width: 1400px;           /* optional max width */
+  margin: 20px auto;           /* top/bottom margin + centered */
+  text-align: center;
+  background: #fffde7;         /* page background */
   font-family: "Comic Sans MS", "Poppins", cursive;
-  background-color: #fffde7;
-  margin: 0;
-  padding: 0;
+  padding: 30px;
+  border: 6px solid #ffd54f;  /* solid border */
+  border-radius: 35px;         /* smooth curved corners */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15); /* subtle shadow */
+  transition: transform 0.3s, box-shadow 0.3s;
+
+  min-height: calc(100vh - 60px); /* full height minus some bottom space */
 }
 
-/* Header */
+.colors-page:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+}
+
+
+
+/* ✨ FLOATING SPARKLES */
+.colors-page::before,
+.colors-page::after {
+  content: "✨";
+  position: absolute;
+  font-size: 2rem;
+  animation: floatSparkle 6s infinite ease-in-out;
+}
+.colors-page::before { top: 10px; left: 15px; }
+.colors-page::after { bottom: 20px; right: 20px; }
+
+@keyframes floatSparkle {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+/* 🌈 HEADER */
 .colors-header {
-  text-align: center;
-  font-size: 3rem;
-  color: #ffeb3b;
-  margin: 20px 0;
-  text-shadow: 2px 2px #00000020;
+  font-size: 2.6rem;
+  margin-bottom: 10px;
+  animation: rainbow 3s infinite;
 }
 
-/* Quiz section */
+/* 🌈 RAINBOW TEXT */
+@keyframes rainbow {
+  0% { color: #f44336; }
+  20% { color: #ff9800; }
+  40% { color: #ffeb3b; }
+  60% { color: #4caf50; }
+  80% { color: #2196f3; }
+  100% { color: #9c27b0; }
+}
+
+/* 🧠 QUIZ */
 .quiz-section {
-  text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
 
-.quiz-image {
-  width: 150px;
-  height: 150px;
-  border-radius: 20px;
-  border: 4px solid #ffeb3b;
-  object-fit: cover;
-  animation: popIn 0.5s ease-in-out;
+.quiz-emoji {
+  font-size: 3.5rem;
+  animation: bounce 1.2s infinite;
 }
 
-.quiz-question {
-  font-size: 1.5rem;
-  margin-top: 10px;
-  color: #333;
-  text-shadow: 1px 1px #00000020;
+/* 🦘 BOUNCE */
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
 }
 
-/* Grid of colors */
+/* 🎨 COLOR BUTTON GRID */
 .colors-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
-  padding: 0 20px;
+  gap: 14px;
+  margin-top: 15px;
 }
 
+/* 🟡 COLOR BUTTON */
 .color-card {
-  width: 120px;
-  height: 120px;
-  border-radius: 15px;
+  min-width: 90px;
+  height: 50px;
+  border-radius: 30px;
+  padding: 0 14px;
+
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+
   cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-  font-size: 1.2rem;
-  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+
+  border: 3px solid rgba(255,255,255,0.7);
+  box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: idleFloat 4s infinite ease-in-out;
+}
+
+/* 🧸 HOVER FUN */
+.color-card:hover {
+  transform: translateY(-6px) scale(1.08);
+  box-shadow: 0 10px 0 rgba(0,0,0,0.25);
+}
+
+/* 👆 CLICK FEEL */
+.color-card:active {
+  transform: translateY(2px);
+  box-shadow: 0 3px 0 rgba(0,0,0,0.2);
+}
+
+/* 🫧 IDLE FLOAT */
+@keyframes idleFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* ⭐ STAR BAR */
+.star-bar {
+  font-size: 1.4rem;
+  margin: 8px 0;
+  background: #fff;
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 3px solid #ffd54f;
+}
+
+/* 🔀 MODE BUTTONS */
+.mode-switch button {
+  margin: 5px;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  background: #ffd54f;
+  box-shadow: 0 4px 0 #fbc02d;
+}
+
+.mode-switch button:hover {
+  transform: scale(1.05);
+}
+
+/* 💬 FEEDBACK */
+.feedback {
+  font-size: 1.8rem;
+  margin-top: 12px;
+  animation: pop 0.5s;
+}
+
+/* 🎉 POP */
+@keyframes pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* 🐻 MASCOT */
+.mascot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 3rem;
+  animation: wave 2s infinite;
+}
+
+@keyframes wave {
+  0%,100% { transform: rotate(0); }
+  50% { transform: rotate(8deg); }
+}
+
+.mascot-text {
+  font-size: 0.95rem;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 12px;
+  border: 2px solid #ffd54f;
+}
+
+/* 🎊 EMOJI RAIN */
+.emoji-fly {
+  position: fixed;
+  top: -20px;
+  font-size: 2rem;
+  animation: fall 2s linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* 🎨 PAINT MODE CANVAS */
+.paint-canvas {
+  width: 90%;
+  height: 260px;
+  margin: 15px auto;
+  border: 4px dotted #ffca28;
+  border-radius: 20px;
+  background: #fff;
   position: relative;
 }
 
-.color-card:hover {
-  transform: scale(1.2);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+.paint-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  position: absolute;
 }
 
-.color-emoji {
-  font-size: 2.5rem;
-  margin-bottom: 8px;
-}
-
-.color-name {
-  font-weight: bold;
-  text-shadow: 1px 1px #00000030;
-}
-
-/* Feedback */
-.feedback {
-  text-align: center;
+/* ---------------- COLORABLE OBJECTS ---------------- */
+.color-objects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  justify-content: center;
   margin-top: 20px;
-  font-size: 1.5rem;
+}
+
+.color-object {
+  width: 120px;
+  height: 120px;
+  border: 3px dashed #ffd54f;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
   font-weight: bold;
-  animation: fadeIn 0.5s ease-in-out;
+  color: #000;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
+  position: relative;
 }
 
-.correct {
-  color: green;
+.color-object:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
-.wrong {
-  color: red;
+.object-name {
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 4px 6px;
+  border-radius: 8px;
+  border: 2px solid #ffd54f;
 }
 
-/* Animations */
-@keyframes popIn {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+/* ---------------- PAINT COLORS SELECTION ---------------- */
+.paint-colors {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 12px 0;
 }
 
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+.paint-color {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #ffd54f;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.paint-color:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
