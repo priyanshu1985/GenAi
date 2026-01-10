@@ -18,6 +18,12 @@ except ImportError as e:
     print(f"Import error for AI routes: {e}")
     ai_router = None
 
+try:
+    from routes.auth_routes import router as auth_router
+except ImportError as e:
+    print(f"Import error for auth routes: {e}")
+    auth_router = None
+
 app = FastAPI(title="Buildathon Backend", version="1.0.0")
 
 # Add CORS middleware
@@ -46,3 +52,8 @@ if ai_router:
     app.include_router(ai_router)
 else:
     print("Warning: Could not load AI routes")
+
+if auth_router:
+    app.include_router(auth_router)
+else:
+    print("Warning: Could not load auth routes")

@@ -70,17 +70,28 @@ def text_to_speech(
     Returns:
         Dictionary with audio data or browser TTS instructions
     """
+    print(f"🔊 TTS: Starting speech synthesis for: '{text[:50]}...'")
+    print(f"🌍 TTS: Language: {language}")
+    print(f"📁 TTS: Return type: {return_type}")
+    
     if AI_MODE == "mock":
+        print("🎭 TTS: Using mock mode")
         return browser_tts_response(text, language, "Mock mode")
 
     # For reliability in demos, use browser TTS by default
     if USE_BROWSER_TTS:
+        print("🌐 TTS: Using browser TTS (configured)")
         return browser_tts_response(text, language, "Browser TTS mode enabled")
+
+    print("🤗 TTS: Attempting Hugging Face API...")
 
     # Try Hugging Face API
     try:
         model = TTS_MODELS.get(language.lower(), TTS_MODELS["default"])
         api_url = f"{HF_API_URL}{model}"
+        
+        print(f"🚀 TTS: Using model: {model}")
+        print(f"🔗 TTS: API URL: {api_url}")
 
         headers = {
             "Authorization": f"Bearer {HF_API_KEY}",
@@ -95,6 +106,8 @@ def text_to_speech(
             json=payload,
             timeout=30
         )
+
+        print(f"📡 TTS: HF Response status: {response.status_code}")
 
         if response.status_code == 200:
             audio_bytes = response.content

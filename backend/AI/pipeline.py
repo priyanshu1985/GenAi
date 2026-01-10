@@ -37,43 +37,59 @@ def voice_to_voice(
         - audio_response: TTS output (base64 or metadata)
         - child_profile: Profile data if available
     """
+    print("=" * 50)
+    print("PIPELINE: voice_to_voice started")
+    print(f"Audio bytes received: {len(audio_bytes)} bytes")
+    print(f"Child ID: {child_id}")
+
     # Load child profile for personalization
     child_profile = None
     if child_id:
         child_profile = get_child_profile(child_id)
+        print(f"Child profile loaded: {child_profile.name if child_profile else 'None'}")
 
     # Step 1: Speech-to-Text
+    print("\n--- STEP 1: Speech-to-Text ---")
     transcribed_text, detected_language = speech_to_text(audio_bytes)
+    print(f"Transcribed text: '{transcribed_text}'")
+    print(f"Detected language: {detected_language}")
 
     if not transcribed_text:
         # Handle empty transcription
+        print("ERROR: Empty transcription, returning error response")
         return {
             "success": False,
             "error": "Could not transcribe audio. Please try again.",
             "transcribed_text": "",
             "detected_language": "unknown",
-            "ai_text_response": "",
-            "audio_response": None
+            "ai_text_response": "I didn't understand that. Could you try again?",
+            "audio_response": text_to_speech("I didn't understand that. Could you try again?", "english", "base64")
         }
 
     # Use child's preferred language if available, otherwise use detected
     response_language = detected_language
     if child_profile and child_profile.preferred_language:
         response_language = child_profile.preferred_language
+    print(f"Response language: {response_language}")
 
     # Step 2: LLM Reasoning
+    print("\n--- STEP 2: LLM Reasoning ---")
     ai_text_response = generate_text(
         user_text=transcribed_text,
         child_id=child_id,
         child_profile=child_profile
     )
+    print(f"AI text response: '{ai_text_response}'")
 
     # Step 3: Text-to-Speech
+    print("\n--- STEP 3: Text-to-Speech ---")
     audio_response = text_to_speech(
         text=ai_text_response,
         language=response_language,
         return_type="base64"
     )
+    print(f"Audio response type: {audio_response.get('tts_type', 'unknown')}")
+    print(f"Audio response has text: {bool(audio_response.get('text'))}")
 
     # Increment session count for the child
     if child_id:
@@ -97,6 +113,10 @@ def voice_to_voice(
             "preferred_language": child_profile.preferred_language,
             "learning_level": child_profile.learning_level
         }
+
+    print("\n--- PIPELINE COMPLETE ---")
+    print(f"Success: {response['success']}")
+    print("=" * 50)
 
     return response
 
@@ -134,36 +154,57 @@ def text_interaction(
     Returns:
         Dictionary with AI response and optional audio
     """
+    print("=" * 50)
+    print("PIPELINE: text_interaction started")
+    print(f"Input text: '{user_text}'")
+    print(f"Child ID: {child_id}")
+    
     # Load child profile
     child_profile = None
     response_language = "hindi"  # Default
 
     if child_id:
+        print(f"📋 Loading child profile for: {child_id}")
         child_profile = get_child_profile(child_id)
         if child_profile:
             response_language = child_profile.preferred_language
+            print(f"✅ Child profile loaded: {child_profile.name}, language: {response_language}")
+        else:
+            print(f"⚠️ No child profile found for: {child_id}")
+    else:
+        print("ℹ️ No child ID provided, using defaults")
 
     # Generate LLM response
+    print("\n--- STEP 1: LLM Generation ---")
     ai_text_response = generate_text(
         user_text=user_text,
         child_id=child_id,
         child_profile=child_profile
     )
+    print(f"AI response: '{ai_text_response}'")
 
     # Generate audio
+    print("\n--- STEP 2: TTS Generation ---")
     audio_response = text_to_speech(
         text=ai_text_response,
         language=response_language,
         return_type="base64"
     )
+    print(f"Audio response type: {audio_response.get('tts_type', 'unknown')}")
 
-    return {
+    result = {
         "success": True,
         "input_text": user_text,
         "ai_text_response": ai_text_response,
         "audio_response": audio_response,
         "response_language": response_language
     }
+    
+    print("\n--- PIPELINE COMPLETE ---")
+    print(f"Success: {result['success']}")
+    print("=" * 50)
+
+    return result
 
 
 def get_greeting(child_id: Optional[str] = None) -> dict:
