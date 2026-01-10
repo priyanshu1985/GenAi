@@ -1,5 +1,4 @@
-import { useState } from "react";
-import numbersData from "../data/numbersData";
+import { useNavigate } from "react-router-dom";
 
 
 import { Container, Row, Col, Card } from "react-bootstrap";
@@ -25,6 +24,18 @@ const dashboardItems = [
 ];
 
 function Dashboard() {
+  const navigate = useNavigate();
+
+  const handleCardClick = (title) => {
+    if (title === "Games") {
+      navigate("/games");
+    } else if (title === "Shapes") {
+      navigate("/shapes");
+    } else if (title === "Colors") {
+      navigate("/colors");
+    }
+  };
+
   return (
     <div className="dashboard-container">
       <Navbar />
@@ -44,6 +55,9 @@ function Dashboard() {
               <Card 
                 className="dashboard-card" 
                 style={{ "--accent-color": item.color }}
+                onClick={() => handleCardClick(item.title)}
+                role="button"
+                tabIndex="0"
               >
                 <Card.Body className="card-body-custom">
                   <div className="icon-wrapper">

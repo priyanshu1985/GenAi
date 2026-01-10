@@ -1,0 +1,114 @@
+body {
+  font-family: "Comic Sans MS", "Poppins", cursive;
+  background-color: #fffde7;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header */
+.colors-header {
+  text-align: center;
+  font-size: 3rem;
+  color: #ffeb3b;
+  margin: 20px 0;
+  text-shadow: 2px 2px #00000020;
+}
+
+/* Quiz section */
+.quiz-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.quiz-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 20px;
+  border: 4px solid #ffeb3b;
+  object-fit: cover;
+  animation: popIn 0.5s ease-in-out;
+}
+
+.quiz-question {
+  font-size: 1.5rem;
+  margin-top: 10px;
+  color: #333;
+  text-shadow: 1px 1px #00000020;
+}
+
+/* Grid of colors */
+.colors-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 20px;
+}
+
+.color-card {
+  width: 120px;
+  height: 120px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  font-size: 1.2rem;
+  color: #fff;
+  position: relative;
+}
+
+.color-card:hover {
+  transform: scale(1.2);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.color-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.color-name {
+  font-weight: bold;
+  text-shadow: 1px 1px #00000030;
+}
+
+/* Feedback */
+.feedback {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.correct {
+  color: green;
+}
+
+.wrong {
+  color: red;
+}
+
+/* Animations */
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
