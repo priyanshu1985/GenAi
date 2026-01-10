@@ -49,6 +49,12 @@ const Navbar = () => {
               >
                 {t("navigation.learn", "Learn")}
               </Link>
+              <Link
+                to="/videos"
+                className={`nav-link ${isActive("/videos") ? "active" : ""}`}
+              >
+                {t("navigation.videos", "Videos")}
+              </Link>
               {(user?.role === "teacher" ||
                 user?.role === "worker" ||
                 user?.role === "admin") && (
