@@ -5,9 +5,9 @@ import Footer from "../components/Footer";
 import "../styles/ParentDashboard.css";
 
 // ============================================================
-// API Configuration
+// API Configuration - uses environment variable
 // ============================================================
-const API_BASE_URL = "https://genai-7j5d.onrender.com/api"; // Updated to deployed backend
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL || "https://genai-7j5d.onrender.com"}/api`;
 
 // Message type emojis (database-tested working types)
 const MESSAGE_TYPE_EMOJIS = {

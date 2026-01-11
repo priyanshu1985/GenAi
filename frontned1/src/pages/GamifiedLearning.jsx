@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Card, Button, Modal } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";

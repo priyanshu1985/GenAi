@@ -20,6 +20,9 @@ import "../styles/dashboard-new.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
+// API Configuration - uses environment variable
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://genai-7j5d.onrender.com";
+
 function Dashboard() {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -56,7 +59,7 @@ function Dashboard() {
     const fetchProgress = async () => {
       try {
         const response = await fetch(
-          `https://genai-7j5d.onrender.com/api/game/progress/${childId}`
+          `${API_BASE_URL}/api/game/progress/${childId}`
         );
         const data = await response.json();
 
@@ -258,7 +261,7 @@ function Dashboard() {
 
     try {
       const response = await fetch(
-        "https://genai-7j5d.onrender.com/api/game/answer/submit-secure",
+        `${API_BASE_URL}/api/game/answer/submit-secure`,
         {
           method: "POST",
           headers: {
