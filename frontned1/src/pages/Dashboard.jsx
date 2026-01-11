@@ -8,20 +8,27 @@ import {
   FaCalculator,
   FaPalette,
   FaShapes,
-  FaMusic,
   FaGamepad,
-  FaStar,
   FaCheck,
   FaTrophy,
   FaCoins,
-  FaFire,
 } from "react-icons/fa";
 import "../styles/dashboard-new.css";
 import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 
 // API Configuration - uses environment variable
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://genai-7j5d.onrender.com";
+
+// Course color configuration
+const COURSE_COLORS = {
+  alphabet: { primary: "#FF6B6B", gradient: "linear-gradient(135deg, #FF6B6B 0%, #ee5a5a 100%)" },
+  numbers: { primary: "#4ECDC4", gradient: "linear-gradient(135deg, #4ECDC4 0%, #44b3ab 100%)" },
+  colors: { primary: "#FFE66D", gradient: "linear-gradient(135deg, #FFE66D 0%, #f5d85e 100%)" },
+  shapes: { primary: "#95E1D3", gradient: "linear-gradient(135deg, #95E1D3 0%, #7dd4c4 100%)" },
+  animals: { primary: "#F38181", gradient: "linear-gradient(135deg, #F38181 0%, #e86f6f 100%)" },
+  fruits: { primary: "#AA96DA", gradient: "linear-gradient(135deg, #AA96DA 0%, #9a85d0 100%)" },
+  mixed: { primary: "#667EEA", gradient: "linear-gradient(135deg, #667EEA 0%, #764BA2 100%)" },
+};
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -82,8 +89,11 @@ function Dashboard() {
   const dashboardItems = [
     {
       title: t("dashboard.alphabet", "Alphabet"),
+      subtitle: "A B C D...",
       icon: <FaFont />,
-      color: "#58CC02", // Green
+      emoji: "🔤",
+      color: COURSE_COLORS.alphabet.primary,
+      gradient: COURSE_COLORS.alphabet.gradient,
       topic: "alphabet",
       progress: 75,
       locked: false,
@@ -92,8 +102,11 @@ function Dashboard() {
     },
     {
       title: t("dashboard.numbers", "Numbers"),
+      subtitle: "1 2 3 4...",
       icon: <FaCalculator />,
-      color: "#1CB0F6", // Blue
+      emoji: "🔢",
+      color: COURSE_COLORS.numbers.primary,
+      gradient: COURSE_COLORS.numbers.gradient,
       topic: "numbers_1_to_10",
       progress: 50,
       locked: false,
@@ -102,8 +115,11 @@ function Dashboard() {
     },
     {
       title: t("dashboard.colors", "Colors"),
+      subtitle: "Red, Blue...",
       icon: <FaPalette />,
-      color: "#FF9600", // Orange
+      emoji: "🎨",
+      color: COURSE_COLORS.colors.primary,
+      gradient: COURSE_COLORS.colors.gradient,
       topic: "colors",
       progress: 30,
       locked: false,
@@ -112,18 +128,24 @@ function Dashboard() {
     },
     {
       title: t("dashboard.shapes", "Shapes"),
+      subtitle: "Circle, Square...",
       icon: <FaShapes />,
-      color: "#CE82FF", // Purple
+      emoji: "🔷",
+      color: COURSE_COLORS.shapes.primary,
+      gradient: COURSE_COLORS.shapes.gradient,
       topic: "shapes",
       progress: 0,
-      locked: gameStats.level < 2, // Unlock at level 2
+      locked: gameStats.level < 2,
       coinsEarned: 0,
       questionsCompleted: 0,
     },
     {
       title: t("dashboard.animals", "Animals"),
-      icon: <span>🦁</span>,
-      color: "#FF86D0", // Pink
+      subtitle: "Lion, Cat...",
+      icon: <span className="emoji-icon">🦁</span>,
+      emoji: "🦁",
+      color: COURSE_COLORS.animals.primary,
+      gradient: COURSE_COLORS.animals.gradient,
       topic: "animals",
       progress: 60,
       locked: false,
@@ -132,18 +154,24 @@ function Dashboard() {
     },
     {
       title: t("dashboard.fruits", "Fruits"),
-      icon: <span>🍎</span>,
-      color: "#4ECDC4", // Teal
+      subtitle: "Apple, Mango...",
+      icon: <span className="emoji-icon">🍎</span>,
+      emoji: "🍎",
+      color: COURSE_COLORS.fruits.primary,
+      gradient: COURSE_COLORS.fruits.gradient,
       topic: "fruits",
       progress: 20,
-      locked: gameStats.level < 3, // Unlock at level 3
+      locked: gameStats.level < 3,
       coinsEarned: 10,
       questionsCompleted: 3,
     },
     {
-      title: t("dashboard.ai_quiz", "AI Quiz Challenge"),
+      title: t("dashboard.ai_quiz", "AI Quiz"),
+      subtitle: "Challenge Mode!",
       icon: <FaGamepad />,
-      color: "#FF4B4B", // Red
+      emoji: "🎮",
+      color: COURSE_COLORS.mixed.primary,
+      gradient: COURSE_COLORS.mixed.gradient,
       topic: "mixed",
       progress: 25,
       locked: false,
@@ -159,10 +187,8 @@ function Dashboard() {
     }
 
     if (item.isGameMode) {
-      // Navigate to gamified learning page
       navigate("/gamified-learning");
     } else {
-      // Navigate to appropriate learning pages
       switch (item.topic) {
         case "alphabet":
           navigate("/alphabet");
@@ -187,71 +213,6 @@ function Dashboard() {
       }
     }
   };
-
-  // Commented out unused functions to fix compilation
-  // const startQuizChallenge = async (topic) => {
-  //   setIsLoading(true);
-  //   setShowQuestionModal(true);
-  //
-  //   try {
-  //     const response = await fetch(
-  //       "https://genai-7j5d.onrender.com/api/game/question/start-session",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //           child_id: childId,
-  //           topic: topic === "mixed" ? null : topic,
-  //         }),
-  //       }
-  //     );
-  //
-  //     const data = await response.json();
-  //
-  //     if (data.success) {
-  //       setCurrentQuestion(data.data.session);
-  //     } else {
-  //       // Fallback to mock question if API fails
-  //       setCurrentQuestion(generateMockQuestion(topic));
-  //     }
-  //   } catch {
-  //     console.log("Game API not available, using mock question");
-  //     setCurrentQuestion(generateMockQuestion(topic));
-  //   }
-  //
-  //   setIsLoading(false);
-  // };
-
-  // const generateMockQuestion = (topic) => {
-  //   const mockQuestions = {
-  //     animals: {
-  //       question_text: "What sound does a cat make?",
-  //       options: ["A) Meow", "B) Woof", "C) Moo", "D) Roar"],
-  //       correct_answer: "A) Meow",
-  //     },
-  //     colors: {
-  //       question_text: "What color is the sun?",
-  //       options: ["A) Blue", "B) Yellow", "C) Green", "D) Red"],
-  //       correct_answer: "B) Yellow",
-  //     },
-  //     mixed: {
-  //       question_text: "How many fingers do you have on one hand?",
-  //       options: ["A) Three", "B) Four", "C) Five", "D) Six"],
-  //       correct_answer: "C) Five",
-  //     },
-  //   };
-  //
-  //   const questionData = mockQuestions[topic] || mockQuestions.mixed;
-  //   return {
-  //     question_id: `mock_${Date.now()}`,
-  //     question_text: questionData.question_text,
-  //     options: questionData.options,
-  //     difficulty: "medium",
-  //     topic: topic,
-  //   };
-  // };
 
   const submitAnswer = async (answer) => {
     if (!currentQuestion) return;
@@ -281,9 +242,8 @@ function Dashboard() {
         setLastResult(data.data.evaluation);
         setGameStats(data.data.updated_stats);
       } else {
-        // Mock result if API fails
         const questionId = currentQuestion?.question_id || "default";
-        const mockCorrect = questionId.length % 3 !== 0; // Deterministic based on question
+        const mockCorrect = questionId.length % 3 !== 0;
         setLastResult({
           is_correct: mockCorrect,
           coins_earned: mockCorrect ? 5 : 0,
@@ -304,7 +264,7 @@ function Dashboard() {
     } catch {
       console.log("Using mock result");
       const questionId = currentQuestion?.question_id || "fallback";
-      const mockCorrect = questionId.length % 4 !== 0; // Deterministic based on question
+      const mockCorrect = questionId.length % 4 !== 0;
       setLastResult({
         is_correct: mockCorrect,
         coins_earned: mockCorrect ? 5 : 0,
@@ -326,7 +286,6 @@ function Dashboard() {
     setShowResult(true);
     setIsLoading(false);
 
-    // Auto close modal after showing result
     setTimeout(() => {
       closeQuestionModal();
     }, 3000);
@@ -345,133 +304,118 @@ function Dashboard() {
   return (
     <div className="dashboard-container">
       <Navbar />
+
       <Container className="dashboard-main">
         {/* Welcome Section */}
         <header className="welcome-section">
-          <h1 className="dashboard-title">
-            <span className="wave">👋</span>
-            {t("dashboard.welcome", "Hi, {{name}}!", { name: userName })}
-          </h1>
-          <p className="dashboard-subtitle">
-            {t("dashboard.subtitle", "What would you like to learn today?")}
-          </p>
+          <div className="welcome-content">
+            <h1 className="dashboard-title">
+              <span className="wave">👋</span>
+              {t("dashboard.welcome", "Namaste, {{name}}!", { name: userName })}
+            </h1>
+            <p className="dashboard-subtitle">
+              {t("dashboard.subtitle", "Aaj kya seekhna hai? Let's have fun learning!")}
+            </p>
+          </div>
+
+          {/* Child Avatar */}
+          <div className="child-avatar-section">
+            <div className="child-avatar">
+              <span>👶</span>
+            </div>
+            <span className="child-name">{userName}</span>
+          </div>
         </header>
 
-        {/* Dashboard Cards */}
-        <Row className="g-3 g-md-4 px-2">
-          {dashboardItems.map((item, index) => (
-            <Col key={index} xs={6} md={4}>
-              <Card
-                className={`dashboard-card ${item.locked ? "locked" : ""}`}
-                style={{ "--accent-color": item.color }}
-                onClick={() => handleCardClick(item)}
-                role="button"
-                tabIndex={item.locked ? -1 : 0}
-              >
-                <Card.Body className="card-body-custom">
-                  {/* Progress indicator */}
-                  {item.progress > 0 && !item.locked && (
-                    <div className="card-progress">
-                      <div
-                        className="card-progress-fill"
-                        style={{
-                          width: `${item.progress}%`,
-                          background: item.color,
-                        }}
-                      />
+        {/* Course Cards Grid */}
+        <div className="courses-section">
+          <h2 className="section-title">
+            <span>📚</span> Choose Your Adventure
+          </h2>
+
+          <Row className="g-4 courses-grid">
+            {dashboardItems.map((item, index) => (
+              <Col key={index} xs={6} md={4} lg={4}>
+                <Card
+                  className={`course-card ${item.locked ? "locked" : ""}`}
+                  style={{
+                    "--accent-color": item.color,
+                    "--accent-gradient": item.gradient
+                  }}
+                  onClick={() => handleCardClick(item)}
+                  role="button"
+                  tabIndex={item.locked ? -1 : 0}
+                >
+                  {/* Top Border Gradient */}
+                  <div className="card-top-border" style={{ background: item.gradient }}></div>
+
+                  <Card.Body className="course-card-body">
+                    {/* Lock Overlay */}
+                    {item.locked && (
+                      <div className="lock-overlay">
+                        <span className="lock-icon">🔒</span>
+                        <span className="lock-text">Level {item.topic === "shapes" ? 2 : 3} Required</span>
+                      </div>
+                    )}
+
+                    {/* Completion Badge */}
+                    {item.progress === 100 && (
+                      <div className="completion-badge" style={{ background: item.gradient }}>
+                        <FaCheck />
+                      </div>
+                    )}
+
+                    {/* Course Icon */}
+                    <div className="course-icon" style={{ background: item.gradient }}>
+                      {item.icon}
                     </div>
-                  )}
 
-                  {/* Lock overlay */}
-                  {item.locked && (
-                    <div className="lock-overlay">
-                      <span>🔒</span>
-                    </div>
-                  )}
+                    {/* Course Info */}
+                    <h3 className="course-title">{item.title}</h3>
+                    <p className="course-subtitle">{item.subtitle}</p>
 
-                  {/* Completion badge */}
-                  {item.progress === 100 && (
-                    <div
-                      className="completion-badge"
-                      style={{ background: item.color }}
-                    >
-                      <FaCheck />
-                    </div>
-                  )}
+                    {/* Progress Bar */}
+                    {!item.locked && item.progress > 0 && (
+                      <div className="course-progress-container">
+                        <div className="course-progress-bar">
+                          <div
+                            className="course-progress-fill"
+                            style={{
+                              width: `${item.progress}%`,
+                              background: item.gradient
+                            }}
+                          />
+                        </div>
+                        <span className="course-progress-text">{item.progress}%</span>
+                      </div>
+                    )}
 
-                  <div
-                    className="icon-wrapper"
-                    style={{ background: item.color }}
-                  >
-                    {item.icon}
-                  </div>
-                  <h3 className="card-title">{item.title}</h3>
-
-                  {/* Progress text */}
-                  {!item.locked && item.progress > 0 && (
-                    <span className="progress-text">
-                      {t("dashboard.progress", "{{progress}}% complete", {
-                        progress: item.progress,
-                      })}
-                    </span>
-                  )}
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-
-        {/* Enhanced Stats Section */}
-        <div className="gamification-bar">
-          <div className="stat-item coins-stat">
-            <span className="stat-icon">
-              <FaCoins color="#FFD700" />
-            </span>
-            <div className="stat-details">
-              <span className="stat-value">{gameStats.coins}</span>
-              <span className="stat-label">Coins</span>
-            </div>
-          </div>
-          <div className="stat-divider"></div>
-          <div className="stat-item streak-stat">
-            <span className="stat-icon">
-              <FaFire color="#FF6B6B" />
-            </span>
-            <div className="stat-details">
-              <span className="stat-value">{gameStats.current_streak}</span>
-              <span className="stat-label">Streak</span>
-            </div>
-          </div>
-          <div className="stat-divider"></div>
-          <div className="stat-item level-stat">
-            <span className="stat-icon">
-              <FaTrophy color="#4ECDC4" />
-            </span>
-            <div className="stat-details">
-              <span className="stat-value">{gameStats.level}</span>
-              <span className="stat-label">Level</span>
-            </div>
-          </div>
-          <div className="stat-divider"></div>
-          <div className="stat-item accuracy-stat">
-            <span className="stat-icon">🎯</span>
-            <div className="stat-details">
-              <span className="stat-value">
-                {Math.round(gameStats.accuracy_percentage)}%
-              </span>
-              <span className="stat-label">Accuracy</span>
-            </div>
-          </div>
+                    {/* Continue Button */}
+                    {!item.locked && (
+                      <button
+                        className="continue-btn"
+                        style={{ background: item.gradient }}
+                      >
+                        {item.progress > 0 ? "Continue Learning" : "Start Learning"}
+                      </button>
+                    )}
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
         </div>
 
-        {/* Level Progress Bar */}
+        {/* Level Progress Section */}
         <div className="level-progress-section">
           <div className="progress-header">
-            <span>🏆 Level {gameStats.level}</span>
+            <span className="level-title">
+              <FaTrophy style={{ color: "#FFD700" }} /> Level {gameStats.level} Progress
+            </span>
             <span className="coins-to-next">
               {gameStats.coins_for_next_level > 0
-                ? `${gameStats.coins_for_next_level} coins to next level`
-                : "Max level reached!"}
+                ? `🪙 ${gameStats.coins_for_next_level} coins to Level ${gameStats.level + 1}`
+                : "🎉 Max level reached!"}
             </span>
           </div>
           <div className="progress-bar-container">
@@ -486,7 +430,7 @@ function Dashboard() {
         {gameStats.badges_earned && gameStats.badges_earned.length > 0 && (
           <div className="badges-section">
             <h4 className="badges-title">
-              🏆 Your Badges ({gameStats.badges_earned.length})
+              🏆 Your Achievements ({gameStats.badges_earned.length})
             </h4>
             <div className="badges-grid">
               {gameStats.badges_earned.map((badge, index) => (
@@ -500,14 +444,13 @@ function Dashboard() {
         )}
       </Container>
 
-      <Footer />
-
       {/* AI Quiz Question Modal */}
       <Modal
         show={showQuestionModal}
         onHide={closeQuestionModal}
         centered
         size="lg"
+        className="quiz-modal"
       >
         <Modal.Body className="question-modal-body">
           {isLoading ? (
@@ -522,7 +465,7 @@ function Dashboard() {
               }`}
             >
               <div className="result-icon">
-                {lastResult.is_correct ? "🎉" : "💝"}
+                {lastResult.is_correct ? "🎉" : "💪"}
               </div>
               <h3 className="result-message">{lastResult.feedback_message}</h3>
               {lastResult.coins_earned > 0 && (
@@ -534,7 +477,7 @@ function Dashboard() {
               {lastResult.level_up && (
                 <div className="level-up">
                   <FaTrophy color="#4ECDC4" />
-                  <span>LEVEL UP!</span>
+                  <span>LEVEL UP! 🚀</span>
                 </div>
               )}
               {lastResult.new_badge && (
@@ -578,7 +521,7 @@ function Dashboard() {
         </Modal.Body>
       </Modal>
 
-      {/* Floating AI Assistant */}
+      {/* Floating AI Assistant Button */}
       <button
         className="ai-assistant-btn"
         aria-label={t("dashboard.aiAssistant", "Talk to me")}

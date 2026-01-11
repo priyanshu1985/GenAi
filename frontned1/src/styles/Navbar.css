@@ -1,170 +1,211 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 
+/* ============================================
+   NAVBAR CONTAINER
+   ============================================ */
 .navbar-container {
   background: #ffffff;
   border-bottom: 2px solid #E5E5E5;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
   font-family: 'Nunito', sans-serif;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .navbar-content {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 12px 24px;
+  padding: 12px 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
+  position: relative;
 }
 
-/* Logo */
+/* ============================================
+   LOGO
+   ============================================ */
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   text-decoration: none;
-  transition: transform 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
 }
 
 .navbar-logo:hover {
-  transform: scale(1.02);
+  transform: scale(1.03);
 }
 
 .logo-icon {
-  font-size: 2rem;
+  font-size: 2.2rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .logo-text {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 800;
-  color: #58CC02;
+  background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   letter-spacing: -0.5px;
 }
 
-/* Stats Bar */
+/* ============================================
+   STATS BAR
+   ============================================ */
 .navbar-stats {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  flex: 1;
+  justify-content: center;
 }
 
 .stat-badge {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: 12px;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 50px;
   font-weight: 700;
-  font-size: 0.95rem;
-  border: 2px solid #E5E5E5;
-  background: #fff;
-  transition: all 0.2s;
+  font-size: 0.9rem;
+  border: 2px solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: default;
 }
 
 .stat-badge:hover {
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .stat-badge.streak {
   color: #FF9600;
+  background: linear-gradient(135deg, #FFF8E1 0%, #FFE0B2 100%);
   border-color: #FFE0B2;
-  background: #FFF8E1;
 }
 
 .stat-badge.streak .stat-icon-nav {
   color: #FF9600;
 }
 
-.stat-badge.hearts {
-  color: #FF4B4B;
-  border-color: #FFCDD2;
-  background: #FFEBEE;
-}
-
-.stat-badge.hearts .stat-icon-nav {
-  color: #FF4B4B;
-}
-
 .stat-badge.gems {
   color: #1CB0F6;
+  background: linear-gradient(135deg, #E1F5FE 0%, #B3E5FC 100%);
   border-color: #B3E5FC;
-  background: #E1F5FE;
 }
 
 .stat-badge.gems .stat-icon-nav {
   color: #1CB0F6;
 }
 
+.stat-badge.level {
+  color: #FFD700;
+  background: linear-gradient(135deg, #FFFDE7 0%, #FFF9C4 100%);
+  border-color: #FFF59D;
+}
+
+.stat-badge.level .stat-icon-nav {
+  color: #FFD700;
+}
+
 .stat-icon-nav {
   font-size: 1rem;
 }
 
-/* Navigation Links */
+/* ============================================
+   NAVIGATION LINKS
+   ============================================ */
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .nav-link {
-  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
   border-radius: 12px;
   text-decoration: none;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #777;
-  transition: all 0.2s;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
 }
 
 .nav-link:hover {
-  color: #58CC02;
-  background: #F0FFF0;
+  color: #667EEA;
+  background: rgba(102, 126, 234, 0.1);
 }
 
 .nav-link.active {
-  color: #58CC02;
-  background: #E8F5E9;
+  color: #667EEA;
+  background: rgba(102, 126, 234, 0.15);
 }
 
-/* Buttons */
+.nav-icon {
+  font-size: 1.1rem;
+}
+
+.nav-text {
+  font-weight: 700;
+}
+
+.nav-divider {
+  width: 1px;
+  height: 24px;
+  background: #E5E5E5;
+  margin: 0 8px;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
 .nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   padding: 10px 20px;
   border-radius: 12px;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   border: 2px solid transparent;
+  white-space: nowrap;
 }
 
 .login-btn {
-  color: #58CC02;
+  color: #667EEA;
   background: transparent;
   border-color: #E5E5E5;
 }
 
 .login-btn:hover {
-  background: #F0FFF0;
-  border-color: #58CC02;
+  background: rgba(102, 126, 234, 0.1);
+  border-color: #667EEA;
 }
 
 .signup-btn {
   color: white;
-  background: #58CC02;
+  background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
   border: none;
-  box-shadow: 0 4px 0 #46a302;
+  box-shadow: 0 4px 0 #5a67c8;
 }
 
 .signup-btn:hover {
   transform: translateY(2px);
-  box-shadow: 0 2px 0 #46a302;
+  box-shadow: 0 2px 0 #5a67c8;
 }
 
 .signup-btn:active {
@@ -181,13 +222,128 @@
 .logout-btn:hover {
   color: #FF4B4B;
   border-color: #FF4B4B;
-  background: #FFF5F5;
+  background: rgba(255, 75, 75, 0.1);
 }
 
-/* Responsive */
+.btn-icon {
+  font-size: 1rem;
+}
+
+/* ============================================
+   MOBILE MENU BUTTON
+   ============================================ */
+.mobile-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(102, 126, 234, 0.1);
+  color: #667EEA;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-btn:hover {
+  background: rgba(102, 126, 234, 0.2);
+}
+
+/* Mobile Overlay */
+.mobile-overlay {
+  display: none;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 1024px) {
+  .navbar-stats {
+    gap: 8px;
+  }
+
+  .stat-badge {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .nav-link {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+}
+
 @media (max-width: 900px) {
+  .mobile-menu-btn {
+    display: flex;
+  }
+
   .navbar-stats {
     display: none;
+  }
+
+  .navbar-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh;
+    background: white;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 80px 20px 30px;
+    gap: 10px;
+    box-shadow: -5px 0 30px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1001;
+    overflow-y: auto;
+  }
+
+  .navbar-links.mobile-open {
+    right: 0;
+  }
+
+  .nav-link {
+    padding: 14px 16px;
+    font-size: 1rem;
+    border-radius: 12px;
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    background: rgba(102, 126, 234, 0.1);
+  }
+
+  .nav-divider {
+    width: 100%;
+    height: 1px;
+    margin: 10px 0;
+  }
+
+  .nav-btn {
+    width: 100%;
+    padding: 14px 20px;
+    justify-content: center;
+    font-size: 1rem;
+  }
+
+  .mobile-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 }
 
@@ -197,20 +353,40 @@
   }
 
   .logo-text {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
   }
 
   .logo-icon {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
   }
 
-  .nav-btn {
-    padding: 8px 14px;
-    font-size: 0.85rem;
+  .navbar-links {
+    width: 100%;
+    right: -100%;
   }
 
-  .nav-link {
-    padding: 8px 12px;
-    font-size: 0.85rem;
+  .navbar-links.mobile-open {
+    right: 0;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+.nav-link:focus-visible,
+.nav-btn:focus-visible,
+.mobile-menu-btn:focus-visible {
+  outline: 3px solid #667EEA;
+  outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .navbar-logo,
+  .stat-badge,
+  .nav-link,
+  .nav-btn,
+  .navbar-links {
+    transition: none;
   }
 }
