@@ -48,6 +48,12 @@ except ImportError as e:
     print(f"Import error for child routes: {e}")
     child_router = None
 
+try:
+    from routes.game_routes import router as game_router
+except ImportError as e:
+    print(f"Import error for game routes: {e}")
+    game_router = None
+
 app = FastAPI(title="Buildathon Backend - Multi-Language", version="1.0.0")
 
 # Add CORS middleware
@@ -102,3 +108,17 @@ if child_router:
     app.include_router(child_router, prefix="/api")
 else:
     print("Warning: Could not load child routes")
+
+if game_router:
+    app.include_router(game_router, prefix="/api")
+else:
+    print("Warning: Could not load game routes")
+
+
+# Run the application
+if __name__ == "__main__":
+    import uvicorn
+    print("🚀 Starting Buildathon Backend Server...")
+    print("📊 API Documentation: http://localhost:8000/docs")
+    print("🔗 Health Check: http://localhost:8000/health")
+    uvicorn.run(app, host="0.0.0.0", port=8000)
