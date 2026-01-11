@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTranslation } from "react-i18next";
@@ -49,26 +49,31 @@ function Dashboard() {
 
   const childId = user?.id || "child_007";
 
-  // Load game progress function
-  const loadGameProgress = useCallback(async () => {
-    try {
-      const response = await fetch(
-        `https://genai-7j5d.onrender.com/api/game/progress/${childId}`
-      );
-      const data = await response.json();
-
-      if (data.success) {
-        setGameStats(data.data);
-      }
-    } catch {
-      console.log("Game API not available, using mock data");
-    }
-  }, [childId]);
-
   // Load game progress on mount
   useEffect(() => {
-    loadGameProgress();
-  }, [loadGameProgress]);
+    let isMounted = true;
+
+    const fetchProgress = async () => {
+      try {
+        const response = await fetch(
+          `https://genai-7j5d.onrender.com/api/game/progress/${childId}`
+        );
+        const data = await response.json();
+
+        if (isMounted && data.success) {
+          setGameStats(data.data);
+        }
+      } catch {
+        console.log("Game API not available, using mock data");
+      }
+    };
+
+    fetchProgress();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [childId]);
 
   // Enhanced dashboard items with gamification
   const dashboardItems = [
@@ -180,69 +185,70 @@ function Dashboard() {
     }
   };
 
-  const startQuizChallenge = async (topic) => {
-    setIsLoading(true);
-    setShowQuestionModal(true);
+  // Commented out unused functions to fix compilation
+  // const startQuizChallenge = async (topic) => {
+  //   setIsLoading(true);
+  //   setShowQuestionModal(true);
+  //
+  //   try {
+  //     const response = await fetch(
+  //       "https://genai-7j5d.onrender.com/api/game/question/start-session",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           child_id: childId,
+  //           topic: topic === "mixed" ? null : topic,
+  //         }),
+  //       }
+  //     );
+  //
+  //     const data = await response.json();
+  //
+  //     if (data.success) {
+  //       setCurrentQuestion(data.data.session);
+  //     } else {
+  //       // Fallback to mock question if API fails
+  //       setCurrentQuestion(generateMockQuestion(topic));
+  //     }
+  //   } catch {
+  //     console.log("Game API not available, using mock question");
+  //     setCurrentQuestion(generateMockQuestion(topic));
+  //   }
+  //
+  //   setIsLoading(false);
+  // };
 
-    try {
-      const response = await fetch(
-        "https://genai-7j5d.onrender.com/api/game/question/start-session",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            child_id: childId,
-            topic: topic === "mixed" ? null : topic,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (data.success) {
-        setCurrentQuestion(data.data.session);
-      } else {
-        // Fallback to mock question if API fails
-        setCurrentQuestion(generateMockQuestion(topic));
-      }
-    } catch {
-      console.log("Game API not available, using mock question");
-      setCurrentQuestion(generateMockQuestion(topic));
-    }
-
-    setIsLoading(false);
-  };
-
-  const generateMockQuestion = (topic) => {
-    const mockQuestions = {
-      animals: {
-        question_text: "What sound does a cat make?",
-        options: ["A) Meow", "B) Woof", "C) Moo", "D) Roar"],
-        correct_answer: "A) Meow",
-      },
-      colors: {
-        question_text: "What color is the sun?",
-        options: ["A) Blue", "B) Yellow", "C) Green", "D) Red"],
-        correct_answer: "B) Yellow",
-      },
-      mixed: {
-        question_text: "How many fingers do you have on one hand?",
-        options: ["A) Three", "B) Four", "C) Five", "D) Six"],
-        correct_answer: "C) Five",
-      },
-    };
-
-    const questionData = mockQuestions[topic] || mockQuestions.mixed;
-    return {
-      question_id: `mock_${Date.now()}`,
-      question_text: questionData.question_text,
-      options: questionData.options,
-      difficulty: "medium",
-      topic: topic,
-    };
-  };
+  // const generateMockQuestion = (topic) => {
+  //   const mockQuestions = {
+  //     animals: {
+  //       question_text: "What sound does a cat make?",
+  //       options: ["A) Meow", "B) Woof", "C) Moo", "D) Roar"],
+  //       correct_answer: "A) Meow",
+  //     },
+  //     colors: {
+  //       question_text: "What color is the sun?",
+  //       options: ["A) Blue", "B) Yellow", "C) Green", "D) Red"],
+  //       correct_answer: "B) Yellow",
+  //     },
+  //     mixed: {
+  //       question_text: "How many fingers do you have on one hand?",
+  //       options: ["A) Three", "B) Four", "C) Five", "D) Six"],
+  //       correct_answer: "C) Five",
+  //     },
+  //   };
+  //
+  //   const questionData = mockQuestions[topic] || mockQuestions.mixed;
+  //   return {
+  //     question_id: `mock_${Date.now()}`,
+  //     question_text: questionData.question_text,
+  //     options: questionData.options,
+  //     difficulty: "medium",
+  //     topic: topic,
+  //   };
+  // };
 
   const submitAnswer = async (answer) => {
     if (!currentQuestion) return;
