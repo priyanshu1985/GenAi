@@ -36,6 +36,18 @@ except ImportError as e:
     print(f"Import error for video routes: {e}")
     video_router = None
 
+try:
+    from routes.message_routes import router as message_router
+except ImportError as e:
+    print(f"Import error for message routes: {e}")
+    message_router = None
+
+try:
+    from routes.child_routes import router as child_router
+except ImportError as e:
+    print(f"Import error for child routes: {e}")
+    child_router = None
+
 app = FastAPI(title="Buildathon Backend - Multi-Language", version="1.0.0")
 
 # Add CORS middleware
@@ -80,3 +92,13 @@ if video_router:
     app.include_router(video_router, prefix="/api")
 else:
     print("Warning: Could not load video routes")
+
+if message_router:
+    app.include_router(message_router, prefix="/api")
+else:
+    print("Warning: Could not load message routes")
+
+if child_router:
+    app.include_router(child_router, prefix="/api")
+else:
+    print("Warning: Could not load child routes")
