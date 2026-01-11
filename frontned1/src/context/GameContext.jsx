@@ -22,6 +22,9 @@ export const GameProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const loadGameStats = useCallback(async () => {
+    // Only load if user is logged in
+    if (!user?.id) return;
+
     try {
       setIsLoading(true);
       const response = await gameAPI.getChildProgress(user.id);
@@ -34,14 +37,14 @@ export const GameProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [user.id]);
+  }, [user?.id]);
 
   // Load game stats on user login
   useEffect(() => {
     if (user?.id) {
       loadGameStats();
     }
-  }, [user, loadGameStats]);
+  }, [user?.id, loadGameStats]);
 
   const updateGameStats = (newStats) => {
     setGameStats((prev) => ({
