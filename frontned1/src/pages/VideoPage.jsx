@@ -123,7 +123,7 @@ const DEMO_VIDEOS = [
 // ============================================================
 // API Configuration
 // ============================================================
-const API_BASE_URL = "http://localhost:8000/api";
+const API_BASE_URL = "https://genai-7j5d.onrender.com/api";
 
 // ============================================================
 // API Service: Fetch approved videos from backend

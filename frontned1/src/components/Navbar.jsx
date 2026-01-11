@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useGame } from "../hooks/useGame";
 import { useTranslation } from "react-i18next";
 import { FaFire, FaHeart, FaGem } from "react-icons/fa";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -8,6 +9,7 @@ import "../styles/Navbar.css";
 const Navbar = () => {
   const location = useLocation();
   const { user, logout, isAuthenticated } = useAuth();
+  const { gameStats } = useGame();
   const { t } = useTranslation();
 
   const isActive = (path) => location.pathname === path;
@@ -26,7 +28,7 @@ const Navbar = () => {
           <div className="navbar-stats">
             <div className="stat-badge streak">
               <FaFire className="stat-icon-nav" />
-              <span>3</span>
+              <span>{gameStats.current_streak}</span>
             </div>
             <div className="stat-badge hearts">
               <FaHeart className="stat-icon-nav" />
@@ -34,7 +36,7 @@ const Navbar = () => {
             </div>
             <div className="stat-badge gems">
               <FaGem className="stat-icon-nav" />
-              <span>120</span>
+              <span>{gameStats.coins}</span>
             </div>
           </div>
         )}

@@ -25,7 +25,8 @@
   "navigation": {
     "learn": "Learn",
     "dashboard": "Dashboard",
-    "admin": "Admin"
+    "admin": "Admin",
+    "videos": "Videos"
   },
   "language": {
     "select": "Select Language",

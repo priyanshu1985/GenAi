@@ -7,7 +7,7 @@ import "../styles/ParentDashboard.css";
 // ============================================================
 // API Configuration
 // ============================================================
-const API_BASE_URL = "http://localhost:8000/api"; // Updated to buildathon backend
+const API_BASE_URL = "https://genai-7j5d.onrender.com/api"; // Updated to deployed backend
 
 // Message type emojis (database-tested working types)
 const MESSAGE_TYPE_EMOJIS = {
@@ -480,8 +480,11 @@ const ParentDashboard = () => {
 
               <div className="activities-list">
                 {selectedChild.recent_activities?.length > 0 ? (
-                  selectedChild.recent_activities.map((activity) => (
-                    <div key={activity.id} className="activity-card">
+                  selectedChild.recent_activities.map((activity, index) => (
+                    <div
+                      key={activity.id || `activity-${index}-${Date.now()}`}
+                      className="activity-card"
+                    >
                       <div className="activity-icon">{activity.emoji}</div>
                       <div className="activity-info">
                         <h4>{activity.activity}</h4>
@@ -507,9 +510,11 @@ const ParentDashboard = () => {
                 <h3>🏆 Achievements</h3>
                 <div className="activities-content">
                   {selectedChild.achievements?.length > 0 ? (
-                    selectedChild.achievements.map((achievement) => (
+                    selectedChild.achievements.map((achievement, index) => (
                       <div
-                        key={achievement.id}
+                        key={
+                          achievement.id || `achievement-${index}-${Date.now()}`
+                        }
                         className={`activity-card ${
                           achievement.earned ? "earned" : "locked"
                         }`}

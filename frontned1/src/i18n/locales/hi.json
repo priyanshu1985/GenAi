@@ -25,7 +25,8 @@
   "navigation": {
     "learn": "सीखें",
     "dashboard": "डैशबोर्ड",
-    "admin": "एडमिन"
+    "admin": "एडमिन",
+    "videos": "वीडियो"
   },
   "language": {
     "select": "भाषा चुनें",

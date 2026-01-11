@@ -9,6 +9,8 @@ import TeacherDashboard from "../pages/TeacherDashboard";
 import ParentDashboard from "../pages/ParentDashboard";
 import AlphabetLearning from "../pages/Alphabet";
 import NumbersLearning from "../pages/Numbers";
+import Animals from "../pages/Animals";
+import Fruits from "../pages/Fruits";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import ShapesLearning from "../pages/shapes";
@@ -55,26 +57,148 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* Auth Routes */}
-      <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-      <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+      <Route
+        path="/login"
+        element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <PublicRoute>
+            <Signup />
+          </PublicRoute>
+        }
+      />
 
       {/* Child Dashboard - Default for children/students */}
-      <Route path="/" element={<ProtectedRoute allowedRoles={["child", "student"]}><Dashboard /></ProtectedRoute>} />
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute allowedRoles={["child", "student"]}>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Learning Routes - Accessible to children and parents */}
-      <Route path="/games" element={<ProtectedRoute><GamifiedLearning /></ProtectedRoute>} />
-      <Route path="/colors" element={<ProtectedRoute><ColorsLearning /></ProtectedRoute>} />
-      <Route path="/alphabet" element={<ProtectedRoute><AlphabetLearning /></ProtectedRoute>} />
-      <Route path="/numbers" element={<ProtectedRoute><NumbersLearning /></ProtectedRoute>} />
-      <Route path="/shapes" element={<ProtectedRoute><ShapesLearning /></ProtectedRoute>} />
-      <Route path="/voice-assistant" element={<ProtectedRoute><VoiceAssistant /></ProtectedRoute>} />
-      <Route path="/videos" element={<ProtectedRoute><VideoPage /></ProtectedRoute>} />
+      <Route
+        path="/games"
+        element={
+          <ProtectedRoute>
+            <GamifiedLearning />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/gamified-learning"
+        element={
+          <ProtectedRoute>
+            <GamifiedLearning />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/colors"
+        element={
+          <ProtectedRoute>
+            <ColorsLearning />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/alphabet"
+        element={
+          <ProtectedRoute>
+            <AlphabetLearning />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/numbers"
+        element={
+          <ProtectedRoute>
+            <NumbersLearning />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/shapes"
+        element={
+          <ProtectedRoute>
+            <ShapesLearning />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/animals"
+        element={
+          <ProtectedRoute>
+            <Animals />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/fruits"
+        element={
+          <ProtectedRoute>
+            <Fruits />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/voice-assistant"
+        element={
+          <ProtectedRoute>
+            <VoiceAssistant />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/videos"
+        element={
+          <ProtectedRoute>
+            <VideoPage />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Role-specific dashboards */}
-      <Route path="/teacher" element={<ProtectedRoute allowedRoles={["teacher"]}><TeacherDashboard /></ProtectedRoute>} />
-      <Route path="/parent" element={<ProtectedRoute allowedRoles={["parent"]}><ParentDashboard /></ProtectedRoute>} />
-      <Route path="/worker" element={<ProtectedRoute allowedRoles={["worker"]}><WorkerDashboard /></ProtectedRoute>} />
-      <Route path="/admin" element={<ProtectedRoute allowedRoles={["admin"]}><AdminDashboard /></ProtectedRoute>} />
+      <Route
+        path="/teacher"
+        element={
+          <ProtectedRoute allowedRoles={["teacher"]}>
+            <TeacherDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/parent"
+        element={
+          <ProtectedRoute allowedRoles={["parent"]}>
+            <ParentDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/worker"
+        element={
+          <ProtectedRoute allowedRoles={["worker"]}>
+            <WorkerDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/login" replace />} />

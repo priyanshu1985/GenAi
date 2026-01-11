@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { aiAPI } from "../services/api";
 import {
   FaMicrophone,
@@ -46,7 +46,7 @@ function VoiceAssistant() {
       "assistant",
       "Hi there! I'm your learning buddy. You can talk to me by pressing the microphone button or type your message below. What would you like to learn today?"
     );
-  }, []);
+  }, [addMessage, initializeSpeechRecognition]);
 
   // Scroll to bottom when conversation updates
   useEffect(() => {
@@ -79,7 +79,7 @@ function VoiceAssistant() {
     }
   };
 
-  const initializeSpeechRecognition = () => {
+  const initializeSpeechRecognition = useCallback(() => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
@@ -139,13 +139,18 @@ function VoiceAssistant() {
     };
 
     recognitionRef.current = recognition;
-  };
+  }, [processTextInput]);
 
-  const addMessage = (role, text, audioBase64 = null) => {
+  // Counter for unique message IDs
+  const messageIdRef = useRef(0);
+
+  const addMessage = useCallback((role, text, audioBase64 = null) => {
+    messageIdRef.current += 1;
+    const uniqueId = `${Date.now()}-${messageIdRef.current}`;
     setConversation((prev) => [
       ...prev,
       {
-        id: Date.now(),
+        id: uniqueId,
         role,
         text,
         audioBase64,
@@ -155,7 +160,7 @@ function VoiceAssistant() {
         }),
       },
     ]);
-  };
+  }, []); // Added missing useCallback closing and dependencies
 
   // Start speech recognition
   const startListening = () => {
@@ -190,136 +195,145 @@ function VoiceAssistant() {
   };
 
   // Process text input (from speech or typing) through AI pipeline
-  const processTextInput = async (inputText) => {
-    console.log("🔄 Processing text input:", inputText);
-    console.log("👦 Child profile:", childId);
+  const processTextInput = useCallback(
+    async (inputText) => {
+      console.log("🔄 Processing text input:", inputText);
+      console.log("👦 Child profile:", childId);
 
-    // Validate inputs
-    if (!inputText || inputText.trim() === "") {
-      console.error("❌ VALIDATION ERROR: No text to process");
-      setError("No text to process. Please speak or type something.");
-      return;
-    }
-
-    if (!childId) {
-      console.error("❌ VALIDATION ERROR: No child profile selected");
-      setError("Please select a child profile");
-      return;
-    }
-
-    setIsProcessing(true);
-
-    // Add user message
-    addMessage("user", inputText.trim());
-    addMessage("assistant", "...", null); // Placeholder while processing
-
-    try {
-      console.log("🚀 💬 TEXT API CALL: Sending text to backend AI service...");
-      console.log("📊 TEXT DETAILS: Length=" + inputText.length + " chars");
-      console.log("🕐 TIMESTAMP: " + new Date().toISOString());
-
-      const startTime = Date.now();
-      // Send text directly instead of audio
-      const response = await aiAPI.interactWithText(inputText.trim(), childId);
-      const endTime = Date.now();
-
-      console.log(
-        "✅ API SUCCESS: Text processing complete in " +
-          (endTime - startTime) +
-          "ms"
-      );
-      console.log("📋 FULL RESPONSE:", JSON.stringify(response, null, 2));
-      console.log("🔍 RESPONSE SUCCESS:", response.success);
-      console.log("🔍 RESPONSE DATA:", response.data);
-
-      // Validate response structure
-      if (!response.data) {
-        console.warn("⚠️ WARNING: No data in API response");
-        setError("Invalid response from server. Please try again.");
-        setConversation((prev) => prev.filter((m) => m.text !== "..."));
+      // Validate inputs
+      if (!inputText || inputText.trim() === "") {
+        console.error("❌ VALIDATION ERROR: No text to process");
+        setError("No text to process. Please speak or type something.");
         return;
       }
 
-      setConversation((prev) => {
-        const updated = [...prev];
-        // Remove the "..." placeholder
-        const filtered = updated.filter((m) => m.text !== "...");
-        return filtered;
-      });
+      if (!childId) {
+        console.error("❌ VALIDATION ERROR: No child profile selected");
+        setError("Please select a child profile");
+        return;
+      }
 
-      // Add AI response
-      if (response.data) {
-        const aiText =
-          response.data.ai_text_response ||
-          response.data.response ||
-          "I didn't understand that. Could you try again?";
-        const audioResponse = response.data.audio_response;
+      setIsProcessing(true);
 
-        console.log("🤖 AI replied:", aiText);
-        console.log("🔊 Audio available:", !!audioResponse);
+      // Add user message
+      addMessage("user", inputText.trim());
+      addMessage("assistant", "...", null); // Placeholder while processing
 
-        addMessage("assistant", aiText, audioResponse);
-
-        // Auto-play audio response if available
-        if (audioResponse) {
-          console.log("▶️ Playing AI response audio");
-          playAudio(audioResponse);
-        } else {
-          console.log("🔇 No audio to play");
-        }
-      } else {
-        console.warn("⚠️ No response data received");
-        addMessage(
-          "assistant",
-          "I'm having trouble processing your request. Please try again."
+      try {
+        console.log(
+          "🚀 💬 TEXT API CALL: Sending text to backend AI service..."
         );
+        console.log("📊 TEXT DETAILS: Length=" + inputText.length + " chars");
+        console.log("🕐 TIMESTAMP: " + new Date().toISOString());
+
+        const startTime = Date.now();
+        // Send text directly instead of audio
+        const response = await aiAPI.interactWithText(
+          inputText.trim(),
+          childId
+        );
+        const endTime = Date.now();
+
+        console.log(
+          "✅ API SUCCESS: Text processing complete in " +
+            (endTime - startTime) +
+            "ms"
+        );
+        console.log("📋 FULL RESPONSE:", JSON.stringify(response, null, 2));
+        console.log("🔍 RESPONSE SUCCESS:", response.success);
+        console.log("🔍 RESPONSE DATA:", response.data);
+
+        // Validate response structure
+        if (!response.data) {
+          console.warn("⚠️ WARNING: No data in API response");
+          setError("Invalid response from server. Please try again.");
+          setConversation((prev) => prev.filter((m) => m.text !== "..."));
+          return;
+        }
+
+        setConversation((prev) => {
+          const updated = [...prev];
+          // Remove the "..." placeholder
+          const filtered = updated.filter((m) => m.text !== "...");
+          return filtered;
+        });
+
+        // Add AI response
+        if (response.data) {
+          const aiText =
+            response.data.ai_text_response ||
+            response.data.response ||
+            "I didn't understand that. Could you try again?";
+          const audioResponse = response.data.audio_response;
+
+          console.log("🤖 AI replied:", aiText);
+          console.log("🔊 Audio available:", !!audioResponse);
+
+          addMessage("assistant", aiText, audioResponse);
+
+          // Auto-play audio response if available
+          if (audioResponse) {
+            console.log("▶️ Playing AI response audio");
+            playAudio(audioResponse);
+          } else {
+            console.log("🔇 No audio to play");
+          }
+        } else {
+          console.warn("⚠️ No response data received");
+          addMessage(
+            "assistant",
+            "I'm having trouble processing your request. Please try again."
+          );
+        }
+      } catch (err) {
+        console.error("❌ 💬 TEXT API FAILED: Text processing error");
+        console.error("📊 ERROR OBJECT:", err);
+        console.error("💥 ERROR MESSAGE:", err.message);
+        console.error("📟 ERROR STATUS:", err.status || err.response?.status);
+        console.error(
+          "📄 ERROR RESPONSE:",
+          err.response?.data || "No response data"
+        );
+        console.error(
+          "🌐 API URL:",
+          `${
+            import.meta.env.VITE_API_BASE_URL ||
+            "https://genai-7j5d.onrender.com"
+          }/ai/text`
+        );
+        console.error("📤 REQUEST PAYLOAD:", {
+          text: inputText.trim(),
+          child_id: childId,
+        });
+
+        let userFriendlyMessage = "Failed to process your request";
+
+        // Check for specific error types
+        if (
+          err.status === 429 ||
+          err.response?.status === 429 ||
+          (err.message && err.message.includes("429"))
+        ) {
+          userFriendlyMessage =
+            "Too many requests. Please wait a moment and try again.";
+        } else if (err.status === 500 || err.response?.status === 500) {
+          userFriendlyMessage = "Server error. Please try again later.";
+        } else if (!navigator.onLine) {
+          userFriendlyMessage =
+            "No internet connection. Please check your network and try again.";
+        }
+
+        setError(userFriendlyMessage);
+        console.error("🔧 USER MESSAGE: " + userFriendlyMessage);
+
+        // Remove placeholder message
+        setConversation((prev) => prev.filter((m) => m.text !== "..."));
+      } finally {
+        setIsProcessing(false);
       }
-    } catch (err) {
-      console.error("❌ 💬 TEXT API FAILED: Text processing error");
-      console.error("📊 ERROR OBJECT:", err);
-      console.error("💥 ERROR MESSAGE:", err.message);
-      console.error("📟 ERROR STATUS:", err.status || err.response?.status);
-      console.error(
-        "📄 ERROR RESPONSE:",
-        err.response?.data || "No response data"
-      );
-      console.error(
-        "🌐 API URL:",
-        `${
-          import.meta.env.VITE_API_BASE_URL || "http://localhost:8000"
-        }/ai/text`
-      );
-      console.error("📤 REQUEST PAYLOAD:", {
-        text: inputText.trim(),
-        child_id: childId,
-      });
-
-      let userFriendlyMessage = "Failed to process your request";
-
-      // Check for specific error types
-      if (
-        err.status === 429 ||
-        err.response?.status === 429 ||
-        (err.message && err.message.includes("429"))
-      ) {
-        userFriendlyMessage =
-          "Too many requests. Please wait a moment and try again.";
-      } else if (err.status === 500 || err.response?.status === 500) {
-        userFriendlyMessage = "Server error. Please try again later.";
-      } else if (!navigator.onLine) {
-        userFriendlyMessage =
-          "No internet connection. Please check your network and try again.";
-      }
-
-      setError(userFriendlyMessage);
-      console.error("🔧 USER MESSAGE: " + userFriendlyMessage);
-
-      // Remove placeholder message
-      setConversation((prev) => prev.filter((m) => m.text !== "..."));
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+    },
+    [childId, addMessage]
+  ); // Dependencies for useCallback
 
   // Handle text input submission
   const handleTextSubmit = async (e) => {

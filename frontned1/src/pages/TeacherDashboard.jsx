@@ -7,7 +7,7 @@ import "../styles/TeacherDashboard.css";
 // ============================================================
 // API Configuration
 // ============================================================
-const API_BASE_URL = "http://localhost:8000/api"; // Updated to buildathon backend
+const API_BASE_URL = "https://genai-7j5d.onrender.com/api"; // Updated to deployed backend
 
 // Message types for the dropdown (Teacher -> Parent)
 const MESSAGE_TYPES = [
@@ -385,9 +385,9 @@ const TeacherDashboard = () => {
 
               <div className="message-list">
                 {receivedMessages.length > 0 ? (
-                  receivedMessages.map((message) => (
+                  receivedMessages.map((message, index) => (
                     <div
-                      key={message.id}
+                      key={message.id || `message-${index}-${Date.now()}`}
                       className={`message-item ${
                         !message.is_read ? "unread" : ""
                       }`}

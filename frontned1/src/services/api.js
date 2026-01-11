@@ -1,5 +1,5 @@
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
+  import.meta.env.VITE_API_BASE_URL || "https://genai-7j5d.onrender.com";
 
 // Helper to get auth headers with language support
 const getAuthHeaders = () => {
@@ -131,7 +131,7 @@ export const aiAPI = {
     const startTime = Date.now();
 
     try {
-      const response = await fetch(`${API_BASE_URL}/ai/text`, {
+      const response = await fetch(`${API_BASE_URL}/api/ai/text`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -182,7 +182,7 @@ export const aiAPI = {
     const startTime = Date.now();
 
     try {
-      const response = await fetch(`${API_BASE_URL}/ai/text`, {
+      const response = await fetch(`${API_BASE_URL}/api/ai/text`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -221,7 +221,7 @@ export const aiAPI = {
   },
 
   // Get greeting for a child
-  getGreeting: (childId) => apiRequest(`/ai/greeting/${childId}`),
+  getGreeting: (childId) => apiRequest(`/api/ai/greeting/${childId}`),
 
   // Post greeting request
   postGreeting: (childId) =>
@@ -231,10 +231,10 @@ export const aiAPI = {
     }),
 
   // Get all children profiles
-  getChildren: () => apiRequest("/api/ai/children"),
+  getChildren: () => apiRequest("/api/children/"),
 
   // Get specific child profile
-  getChild: (childId) => apiRequest(`/api/ai/child/${childId}`),
+  getChild: (childId) => apiRequest(`/api/children/${childId}`),
 
   // Health check
   health: () => apiRequest("/api/ai/health"),
