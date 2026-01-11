@@ -1,378 +1,526 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useTranslation } from "react-i18next";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "../styles/TeacherDashboard.css";
 
 // ============================================================
-// DEMO DATA - In production, fetch from Supabase
+// API Configuration
 // ============================================================
-const DEMO_CHILDREN = [
-  {
-    id: 1,
-    name: "Raju Kumar",
-    age: 4,
-    parentName: "Sunita Kumar",
-    parentPhone: "+91 98765 43210",
-    level: "Alphabets",
-    progress: 65,
-    lastActive: "Today",
-    status: "active",
-  },
-  {
-    id: 2,
-    name: "Priya Sharma",
-    age: 5,
-    parentName: "Rakesh Sharma",
-    parentPhone: "+91 87654 32109",
-    level: "Numbers",
-    progress: 80,
-    lastActive: "Yesterday",
-    status: "active",
-  },
-  {
-    id: 3,
-    name: "Amit Singh",
-    age: 3,
-    parentName: "Meena Singh",
-    parentPhone: "+91 76543 21098",
-    level: "Colors",
-    progress: 40,
-    lastActive: "2 days ago",
-    status: "inactive",
-  },
-  {
-    id: 4,
-    name: "Sita Devi",
-    age: 6,
-    parentName: "Ram Prasad",
-    parentPhone: "+91 65432 10987",
-    level: "Shapes",
-    progress: 90,
-    lastActive: "Today",
-    status: "active",
-  },
+const API_BASE_URL = "http://localhost:8000/api"; // Updated to buildathon backend
+
+// Message types for the dropdown (Teacher -> Parent)
+const MESSAGE_TYPES = [
+  { value: "general", label: "General Message", emoji: "💬" },
+  { value: "homework", label: "Homework", emoji: "📝" },
+  { value: "progress", label: "Progress Update", emoji: "📊" },
+  { value: "reminder", label: "Reminder", emoji: "🔔" },
+  { value: "announcement", label: "Announcement", emoji: "📢" },
 ];
 
-const DEMO_MESSAGES = [
-  {
-    id: 1,
-    from: "Sunita Kumar",
-    child: "Raju",
-    message: "Raju is enjoying the alphabet lessons!",
-    time: "2 hours ago",
-    read: false,
-  },
-  {
-    id: 2,
-    from: "Rakesh Sharma",
-    child: "Priya",
-    message: "Can you suggest more number activities?",
-    time: "Yesterday",
-    read: true,
-  },
-];
+// Parent message types (for display)
+const PARENT_MESSAGE_TYPES = {
+  complaint: { label: "Complaint", emoji: "⚠️" },
+  doubt: { label: "Doubt/Question", emoji: "❓" },
+  feedback: { label: "Feedback", emoji: "💭" },
+  general: { label: "General", emoji: "💬" },
+};
 
 const TeacherDashboard = () => {
-  const navigate = useNavigate();
   const { user } = useAuth();
-  const { t } = useTranslation();
 
-  const [children] = useState(DEMO_CHILDREN);
-  const [messages] = useState(DEMO_MESSAGES);
-  const [selectedChild, setSelectedChild] = useState(null);
+  // State management
+  const [parents, setParents] = useState([]);
+  const [selectedParent, setSelectedParent] = useState(null);
   const [showMessageModal, setShowMessageModal] = useState(false);
   const [newMessage, setNewMessage] = useState("");
+  const [messageType, setMessageType] = useState("general");
+  const [sending, setSending] = useState(false);
+  const [sentMessages] = useState([]);
+  const [receivedMessages, setReceivedMessages] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("overview");
 
-  // Stats calculation
-  const totalChildren = children.length;
-  const activeToday = children.filter((c) => c.lastActive === "Today").length;
-  const avgProgress = Math.round(
-    children.reduce((sum, c) => sum + c.progress, 0) / children.length
-  );
-  const unreadMessages = messages.filter((m) => !m.read).length;
+  // Fetch data on mount
+  useEffect(() => {
+    fetchParents();
+    fetchMessages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const handleViewChild = (child) => {
-    setSelectedChild(child);
-  };
+  // Fetch list of parents from API
+  const fetchParents = async () => {
+    try {
+      console.log("Fetching parents for teacher..."); // Debug log
+      const response = await fetch(`${API_BASE_URL}/users/by-role/parent`, {
+        headers: {
+          "X-User-Id": user?.id || "demo-teacher-id",
+          "X-User-Role": "teacher",
+        },
+      });
 
-  const handleSendMessage = () => {
-    if (newMessage.trim() && selectedChild) {
-      // In production, send to backend API
-      alert(`Message sent to ${selectedChild.parentName}: ${newMessage}`);
-      setNewMessage("");
-      setShowMessageModal(false);
+      console.log("Parents response:", response); // Debug log
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Parents data:", data); // Debug log
+        // Convert users array to parents format
+        const parents = (data.users || []).map((user) => ({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          child_name: "Student",
+          phone: "+91-9876543210",
+        }));
+        setParents(parents);
+      } else {
+        console.error("Failed to fetch parents:", response.status);
+        // Fallback demo parents
+        setParents([
+          {
+            id: "parent-1",
+            name: "Rajesh Sharma",
+            email: "rajesh@gmail.com",
+            child_name: "Priyanshu Manke",
+          },
+          {
+            id: "parent-2",
+            name: "Priya Patel",
+            email: "priya@gmail.com",
+            child_name: "Aadhya Patel",
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error("Error fetching parents:", error);
+      // Fallback demo parents
+      setParents([
+        {
+          id: "parent-1",
+          name: "Rajesh Sharma",
+          email: "rajesh@gmail.com",
+          child_name: "Priyanshu Manke",
+        },
+        {
+          id: "parent-2",
+          name: "Priya Patel",
+          email: "priya@gmail.com",
+          child_name: "Aadhya Patel",
+        },
+      ]);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const getStatusColor = (status) => {
-    return status === "active" ? "#48BB78" : "#CBD5E0";
+  // Fetch messages (sent and received)
+  const fetchMessages = async () => {
+    try {
+      console.log("Fetching messages for teacher..."); // Debug log
+      const response = await fetch(`${API_BASE_URL}/messages/received`, {
+        headers: {
+          "X-User-Id": user?.id || "demo-teacher-id",
+          "X-User-Role": "teacher",
+        },
+      });
+
+      console.log("Messages response:", response); // Debug log
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Messages data:", data); // Debug log
+
+        // Backend already filters messages correctly by receiver_id
+        // All messages here are from parents to this teacher
+        setReceivedMessages(data.messages || []);
+        console.log(
+          "Messages from parents loaded:",
+          (data.messages || []).length
+        ); // Debug log
+      } else {
+        console.error("Failed to fetch messages:", response.status);
+        // Fallback demo messages
+        setReceivedMessages([
+          {
+            id: "msg-1",
+            sender_name: "Rajesh Sharma",
+            message: "I have a question about Priyanshu's homework progress.",
+            message_type: "doubt",
+            timestamp: new Date().toISOString(),
+            is_read: false,
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      // Fallback demo messages
+      setReceivedMessages([
+        {
+          id: "msg-1",
+          sender_name: "Rajesh Sharma",
+          message: "I have a question about Priyanshu's homework progress.",
+          message_type: "doubt",
+          timestamp: new Date().toISOString(),
+          is_read: false,
+        },
+      ]);
+    }
   };
 
-  const getProgressColor = (progress) => {
-    if (progress >= 80) return "#48BB78";
-    if (progress >= 50) return "#ECC94B";
-    return "#FC8181";
+  // Send message to parent via API
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || !selectedParent) {
+      setSuccessMessage("Please select a parent and enter a message.");
+      return;
+    }
+
+    setSending(true);
+    setSuccessMessage("");
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/messages/send`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-User-Id": user?.id || "demo-teacher-id",
+          "X-User-Role": "teacher",
+        },
+        body: JSON.stringify({
+          receiver_id: selectedParent.id,
+          message: newMessage.trim(),
+          message_type: messageType,
+        }),
+      });
+
+      if (response.ok) {
+        setSuccessMessage(
+          `Message sent successfully to ${selectedParent.name}!`
+        );
+        setNewMessage("");
+        setSelectedParent(null);
+        setShowMessageModal(false);
+        fetchMessages();
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Failed to send message");
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      setSuccessMessage("Failed to send message. Please try again.");
+    } finally {
+      setSending(false);
+    }
   };
+
+  // Mark message as read
+  const handleMarkAsRead = async (messageId) => {
+    try {
+      await fetch(`${API_BASE_URL}/messages/${messageId}/read`, {
+        method: "POST",
+        headers: {
+          "X-User-Id": user?.id || "demo-teacher-id",
+          "X-User-Role": "teacher",
+        },
+      });
+      fetchMessages();
+    } catch (error) {
+      console.error("Error marking message as read:", error);
+    }
+  };
+
+  const getMessageTypeEmoji = (type) => {
+    return PARENT_MESSAGE_TYPES[type]?.emoji || "💬";
+  };
+
+  const formatTime = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) return "Today";
+    if (diffDays === 2) return "Yesterday";
+    if (diffDays < 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString();
+  };
+
+  if (loading) {
+    return (
+      <div className="dashboard-container">
+        <Navbar />
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading teacher dashboard...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
-    <div className="teacher-dashboard">
+    <div className="dashboard-container">
       <Navbar />
 
-      <main className="teacher-main">
-        {/* Header */}
-        <header className="teacher-header">
-          <div className="header-info">
-            <h1>Welcome, {user?.name || "Teacher"}</h1>
-            <p>Manage your students and track their progress</p>
+      <main className="dashboard-main">
+        {/* Header Section */}
+        <div className="dashboard-header">
+          <div className="welcome-section">
+            <h1 className="welcome-title">
+              Hello, {user?.name || "Teacher"}! 👨‍🏫
+            </h1>
+            <p className="welcome-subtitle">
+              🚀 Empower young minds and build strong parent partnerships today
+            </p>
           </div>
-          <div className="header-actions">
-            <button
-              className="btn-primary"
-              onClick={() => navigate("/videos")}
-            >
-              Manage Videos
-            </button>
-            <button className="btn-secondary">+ Add Child</button>
-          </div>
-        </header>
 
-        {/* Stats Cards */}
-        <section className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon blue">
-              <span>👶</span>
+          {/* Quick Stats */}
+          <div className="quick-stats">
+            <div className="stat-card">
+              <div className="stat-value">{parents.length}</div>
+              <div className="stat-label">👨‍👩‍👧‍👦 Parents</div>
             </div>
-            <div className="stat-info">
-              <h3>{totalChildren}</h3>
-              <p>Total Children</p>
+            <div className="stat-card">
+              <div className="stat-value">{receivedMessages.length}</div>
+              <div className="stat-label">📨 Received</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-value">{sentMessages.length}</div>
+              <div className="stat-label">📤 Sent</div>
             </div>
           </div>
-          <div className="stat-card">
-            <div className="stat-icon green">
-              <span>🟢</span>
-            </div>
-            <div className="stat-info">
-              <h3>{activeToday}</h3>
-              <p>Active Today</p>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon orange">
-              <span>📊</span>
-            </div>
-            <div className="stat-info">
-              <h3>{avgProgress}%</h3>
-              <p>Avg Progress</p>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon purple">
-              <span>💬</span>
-            </div>
-            <div className="stat-info">
-              <h3>{unreadMessages}</h3>
-              <p>New Messages</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Main Content Grid */}
-        <div className="content-grid">
-          {/* Children List */}
-          <section className="children-section">
-            <div className="section-header">
-              <h2>My Students</h2>
-              <input
-                type="search"
-                placeholder="Search students..."
-                className="search-input"
-              />
-            </div>
-
-            <div className="children-list">
-              {children.map((child) => (
-                <div
-                  key={child.id}
-                  className={`child-card ${
-                    selectedChild?.id === child.id ? "selected" : ""
-                  }`}
-                  onClick={() => handleViewChild(child)}
-                >
-                  <div className="child-avatar">
-                    {child.name.charAt(0)}
-                  </div>
-                  <div className="child-info">
-                    <h4>{child.name}</h4>
-                    <p>Age: {child.age} | Level: {child.level}</p>
-                  </div>
-                  <div className="child-status">
-                    <div
-                      className="status-dot"
-                      style={{ backgroundColor: getStatusColor(child.status) }}
-                    />
-                    <span className="last-active">{child.lastActive}</span>
-                  </div>
-                  <div className="child-progress">
-                    <div className="progress-bar">
-                      <div
-                        className="progress-fill"
-                        style={{
-                          width: `${child.progress}%`,
-                          backgroundColor: getProgressColor(child.progress),
-                        }}
-                      />
-                    </div>
-                    <span>{child.progress}%</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Child Detail / Messages */}
-          <section className="detail-section">
-            {selectedChild ? (
-              <div className="child-detail">
-                <div className="detail-header">
-                  <div className="detail-avatar">
-                    {selectedChild.name.charAt(0)}
-                  </div>
-                  <div>
-                    <h2>{selectedChild.name}</h2>
-                    <p>Age: {selectedChild.age} years</p>
-                  </div>
-                </div>
-
-                <div className="detail-stats">
-                  <div className="detail-stat">
-                    <span className="label">Current Level</span>
-                    <span className="value">{selectedChild.level}</span>
-                  </div>
-                  <div className="detail-stat">
-                    <span className="label">Progress</span>
-                    <span className="value">{selectedChild.progress}%</span>
-                  </div>
-                  <div className="detail-stat">
-                    <span className="label">Last Active</span>
-                    <span className="value">{selectedChild.lastActive}</span>
-                  </div>
-                </div>
-
-                <div className="parent-info">
-                  <h3>Parent Information</h3>
-                  <p><strong>Name:</strong> {selectedChild.parentName}</p>
-                  <p><strong>Phone:</strong> {selectedChild.parentPhone}</p>
-                </div>
-
-                <div className="detail-actions">
-                  <button
-                    className="btn-primary"
-                    onClick={() => setShowMessageModal(true)}
-                  >
-                    Message Parent
-                  </button>
-                  <button className="btn-secondary">View Full Report</button>
-                </div>
-
-                {/* Learning Progress */}
-                <div className="learning-progress">
-                  <h3>Learning Progress</h3>
-                  <div className="progress-items">
-                    <div className="progress-item">
-                      <span>Alphabets</span>
-                      <div className="mini-progress">
-                        <div style={{ width: "75%", backgroundColor: "#48BB78" }} />
-                      </div>
-                      <span>75%</span>
-                    </div>
-                    <div className="progress-item">
-                      <span>Numbers</span>
-                      <div className="mini-progress">
-                        <div style={{ width: "60%", backgroundColor: "#ECC94B" }} />
-                      </div>
-                      <span>60%</span>
-                    </div>
-                    <div className="progress-item">
-                      <span>Colors</span>
-                      <div className="mini-progress">
-                        <div style={{ width: "90%", backgroundColor: "#48BB78" }} />
-                      </div>
-                      <span>90%</span>
-                    </div>
-                    <div className="progress-item">
-                      <span>Shapes</span>
-                      <div className="mini-progress">
-                        <div style={{ width: "40%", backgroundColor: "#FC8181" }} />
-                      </div>
-                      <span>40%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="no-selection">
-                <span>👈</span>
-                <p>Select a student to view details</p>
-              </div>
-            )}
-          </section>
         </div>
 
-        {/* Recent Messages */}
-        <section className="messages-section">
-          <div className="section-header">
-            <h2>Recent Messages from Parents</h2>
-            <button className="btn-text">View All</button>
-          </div>
-          <div className="messages-list">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`message-card ${!msg.read ? "unread" : ""}`}
-              >
-                <div className="message-avatar">{msg.from.charAt(0)}</div>
-                <div className="message-content">
-                  <div className="message-header">
-                    <strong>{msg.from}</strong>
-                    <span className="message-child">({msg.child}'s parent)</span>
-                  </div>
-                  <p>{msg.message}</p>
-                  <span className="message-time">{msg.time}</span>
-                </div>
-                <button className="btn-reply">Reply</button>
+        {/* Tab Navigation */}
+        <div className="tab-navigation">
+          <button
+            className={`tab-button ${activeTab === "overview" ? "active" : ""}`}
+            onClick={() => setActiveTab("overview")}
+          >
+            📊 Overview
+          </button>
+          <button
+            className={`tab-button ${activeTab === "parents" ? "active" : ""}`}
+            onClick={() => setActiveTab("parents")}
+          >
+            👨‍👩‍👧‍👦 Parents
+          </button>
+          <button
+            className={`tab-button ${activeTab === "messages" ? "active" : ""}`}
+            onClick={() => setActiveTab("messages")}
+          >
+            💬 Messages
+          </button>
+        </div>
+
+        {/* Tab Content */}
+        <div className="tab-content">
+          {activeTab === "overview" && (
+            <div className="overview-content">
+              <div className="overview-card">
+                <h3>👥 Parent Communication</h3>
+                <p>
+                  Maintain regular communication with {parents.length} parents
+                </p>
+                <p>
+                  Keep parents informed about their child's progress and
+                  activities
+                </p>
               </div>
-            ))}
+
+              <div className="overview-card">
+                <h3>📊 Message Statistics</h3>
+                <p>Received: {receivedMessages.length} messages</p>
+                <p>Stay responsive to parent inquiries and feedback</p>
+              </div>
+
+              <div className="overview-card">
+                <h3>🎯 Today's Focus</h3>
+                <p>Review parent feedback</p>
+                <p>Send progress updates</p>
+                <p>Schedule parent meetings</p>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "parents" && (
+            <div className="parents-content">
+              {parents.length > 0 ? (
+                parents.map((parent) => (
+                  <div key={parent.id} className="parent-card">
+                    <h4 className="parent-name">{parent.name}</h4>
+                    <p className="parent-contact">📧 {parent.email}</p>
+                    <p className="parent-contact">
+                      📱 {parent.phone || "Not provided"}
+                    </p>
+                    <button
+                      className="contact-button"
+                      onClick={() => {
+                        setSelectedParent(parent);
+                        setShowMessageModal(true);
+                      }}
+                    >
+                      Send Message
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <div className="no-data">
+                  <p>📭 No parents found</p>
+                  <p>Parents will appear here once they register</p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {activeTab === "messages" && (
+            <div className="messages-content">
+              <div className="compose-message">
+                <h3>📨 Received Messages</h3>
+                <button
+                  className="send-button"
+                  onClick={() => setShowMessageModal(true)}
+                >
+                  ✉️ Send Message
+                </button>
+              </div>
+
+              <div className="message-list">
+                {receivedMessages.length > 0 ? (
+                  receivedMessages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`message-item ${
+                        !message.is_read ? "unread" : ""
+                      }`}
+                    >
+                      <div className="message-header">
+                        <div className="message-from">
+                          <span className="sender-name">
+                            👨‍👩‍👧‍👦 {message.sender_name || "Parent"}
+                          </span>
+                          {!message.is_read && (
+                            <span className="new-badge">NEW</span>
+                          )}
+                        </div>
+                        <div className="message-meta">
+                          <span className="message-type">
+                            {getMessageTypeEmoji(message.message_type)}{" "}
+                            {PARENT_MESSAGE_TYPES[message.message_type]
+                              ?.label || "General"}
+                          </span>
+                          <span className="message-date">
+                            {formatTime(
+                              message.created_at || message.timestamp
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="message-body">{message.message}</div>
+                      {!message.is_read && (
+                        <button
+                          className="mark-read-btn"
+                          onClick={() => handleMarkAsRead(message.id)}
+                        >
+                          Mark as Read ✓
+                        </button>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <div className="message-item empty-state">
+                    <p>📭 No messages from parents yet</p>
+                    <p>Messages from parents will appear here</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Success Message */}
+        {successMessage && (
+          <div className="success-banner">
+            <p>✅ {successMessage}</p>
+            <button onClick={() => setSuccessMessage("")}>×</button>
           </div>
-        </section>
+        )}
       </main>
 
-      {/* Message Modal */}
-      {showMessageModal && selectedChild && (
-        <div className="modal-overlay" onClick={() => setShowMessageModal(false)}>
+      {/* Send Message Modal */}
+      {showMessageModal && (
+        <div
+          className="modal-overlay"
+          onClick={() => setShowMessageModal(false)}
+        >
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>Message to {selectedChild.parentName}</h3>
-            <p className="modal-subtitle">
-              Regarding: {selectedChild.name}'s learning progress
-            </p>
-            <textarea
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Type your message here..."
-              rows={5}
-            />
-            <div className="modal-actions">
+            <div className="modal-header">
+              <h3 className="modal-title">📨 Send Message to Parent</h3>
               <button
-                className="btn-secondary"
+                className="modal-close"
                 onClick={() => setShowMessageModal(false)}
               >
-                Cancel
+                ×
               </button>
-              <button className="btn-primary" onClick={handleSendMessage}>
-                Send Message
-              </button>
+            </div>
+
+            <div className="message-form">
+              <div className="form-group">
+                <label>Select Parent:</label>
+                <select
+                  value={selectedParent?.id || ""}
+                  onChange={(e) =>
+                    setSelectedParent(
+                      parents.find((p) => p.id === e.target.value)
+                    )
+                  }
+                >
+                  <option value="">Choose a parent...</option>
+                  {parents.map((parent) => (
+                    <option key={parent.id} value={parent.id}>
+                      {parent.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Message Type:</label>
+                <select
+                  value={messageType}
+                  onChange={(e) => setMessageType(e.target.value)}
+                >
+                  {MESSAGE_TYPES.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.emoji} {type.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Message:</label>
+                <textarea
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Type your message here..."
+                  rows="4"
+                />
+              </div>
+
+              <div className="modal-actions">
+                <button
+                  className="cancel-btn"
+                  onClick={() => setShowMessageModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="send-button"
+                  onClick={handleSendMessage}
+                  disabled={sending || !newMessage.trim() || !selectedParent}
+                >
+                  {sending ? "Sending..." : "Send Message"}
+                </button>
+              </div>
             </div>
           </div>
         </div>

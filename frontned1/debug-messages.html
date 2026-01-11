@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Message System Debug</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f0f0f0;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .status {
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+      }
+      .success {
+        background: #d4edda;
+        color: #155724;
+        border-color: #c3e6cb;
+      }
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+        border-color: #f5c6cb;
+      }
+      .info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border-color: #bee5eb;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .json {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        white-space: pre-wrap;
+        font-family: monospace;
+        font-size: 12px;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      input[type="text"] {
+        padding: 8px;
+        margin: 5px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        width: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📨 Message System Debug Tool</h1>
+
+      <div class="status info">
+        <h3>Step 1: Database Schema Check</h3>
+        <button onclick="checkSchema()">Check Database Schema</button>
+        <div id="schema-status">Click to test which schema is available...</div>
+      </div>
+
+      <div class="status info">
+        <h3>Step 2: Backend Status</h3>
+        <div id="backend-status">Click to test...</div>
+      </div>
+
+      <div class="status info">
+        <h3>Step 3: Test Parent Messages API</h3>
+        <label>Parent ID: </label>
+        <input
+          type="text"
+          id="parentId"
+          value="demo-parent-id"
+          placeholder="Enter parent ID"
+        />
+        <button onclick="fetchMessages()">Fetch Messages</button>
+        <div id="messages-result">Click to test...</div>
+      </div>
+
+      <div class="status info">
+        <h3>Step 4: Send Test Message</h3>
+        <label>Teacher ID: </label>
+        <input
+          type="text"
+          id="teacherId"
+          value="demo-teacher-id"
+          placeholder="Enter teacher ID"
+        />
+        <br />
+        <label>Parent ID: </label>
+        <input
+          type="text"
+          id="targetParentId"
+          value="demo-parent-id"
+          placeholder="Enter parent ID"
+        />
+        <br />
+        <label>Message: </label>
+        <input
+          type="text"
+          id="messageText"
+          value="Test message from teacher"
+          placeholder="Enter message"
+        />
+        <br />
+        <button onclick="sendMessage()">Send Message</button>
+        <div id="send-result">Click to test...</div>
+      </div>
+
+      <div class="status info">
+        <h3>Common Issues & Solutions</h3>
+        <ul>
+          <li>
+            <strong>503 Error:</strong> Supabase not configured - Check
+            SUPABASE_URL and SUPABASE_KEY in backend/.env
+          </li>
+          <li>
+            <strong>404 Error:</strong> Table doesn't exist - Run the SQL schema
+            in Supabase SQL Editor
+          </li>
+          <li>
+            <strong>Empty messages:</strong> No data in table - Use the "Send
+            Test Message" button
+          </li>
+          <li>
+            <strong>Frontend issues:</strong> Check browser console for CORS or
+            network errors
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE = "http://localhost:8000/api";
+
+      async function checkSchema() {
+        const status = document.getElementById("schema-status");
+        status.innerHTML = "Checking database schema...";
+
+        try {
+          const response = await fetch(`${API_BASE}/messages/test-schema`);
+          const data = await response.json();
+
+          if (response.ok) {
+            if (data.schema === "new") {
+              status.innerHTML = `<div class="status success">✅ New schema available: ${data.message}<br>Has data: ${data.has_data}</div>`;
+            } else if (data.schema === "old") {
+              status.innerHTML = `<div class="status error">⚠️ Old schema detected: ${data.message}<br>Has data: ${data.has_data}<br><strong>Action:</strong> Run the migration script</div>`;
+            } else {
+              status.innerHTML = `<div class="status error">❌ Schema issues: ${data.message}</div>`;
+            }
+          } else {
+            status.innerHTML = `<div class="status error">❌ Schema check failed: ${response.status}</div>`;
+          }
+        } catch (error) {
+          status.innerHTML = `<div class="status error">❌ Network Error: ${error.message}</div>`;
+        }
+      }
+
+      async function checkBackend() {
+        const status = document.getElementById("backend-status");
+        status.innerHTML = "Checking...";
+
+        try {
+          const response = await fetch("http://localhost:8000");
+          if (response.ok) {
+            const data = await response.json();
+            status.innerHTML = `<div class="status success">✅ Backend running: ${data.message}</div>`;
+          } else {
+            status.innerHTML = `<div class="status error">❌ Backend returned ${response.status}</div>`;
+          }
+        } catch (error) {
+          status.innerHTML = `<div class="status error">❌ Backend not accessible: ${error.message}</div>`;
+        }
+      }
+
+      async function fetchMessages() {
+        const status = document.getElementById("messages-result");
+        const parentId = document.getElementById("parentId").value;
+
+        status.innerHTML = "Fetching messages...";
+
+        try {
+          const response = await fetch(`${API_BASE}/messages/parent`, {
+            headers: {
+              "X-User-Id": parentId,
+              "Content-Type": "application/json",
+            },
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            status.innerHTML = `
+                        <div class="status success">
+                            ✅ API Call Successful<br>
+                            <strong>Messages Count:</strong> ${
+                              data.messages?.length || 0
+                            }<br>
+                            <strong>Unread Count:</strong> ${
+                              data.unread_count || 0
+                            }
+                            <div class="json">${JSON.stringify(
+                              data,
+                              null,
+                              2
+                            )}</div>
+                        </div>
+                    `;
+          } else {
+            status.innerHTML = `
+                        <div class="status error">
+                            ❌ API Error: ${response.status}<br>
+                            <div class="json">${JSON.stringify(
+                              data,
+                              null,
+                              2
+                            )}</div>
+                        </div>
+                    `;
+          }
+        } catch (error) {
+          status.innerHTML = `<div class="status error">❌ Network Error: ${error.message}</div>`;
+        }
+      }
+
+      async function sendMessage() {
+        const status = document.getElementById("send-result");
+        const teacherId = document.getElementById("teacherId").value;
+        const parentId = document.getElementById("targetParentId").value;
+        const message = document.getElementById("messageText").value;
+
+        status.innerHTML = "Sending message...";
+
+        try {
+          const response = await fetch(`${API_BASE}/messages/send`, {
+            method: "POST",
+            headers: {
+              "X-User-Id": teacherId,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              parent_id: parentId,
+              message: message,
+              message_type: "general",
+            }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            status.innerHTML = `
+                        <div class="status success">
+                            ✅ Message Sent Successfully!<br>
+                            <strong>Message ID:</strong> ${data.message_id}<br>
+                            <div class="json">${JSON.stringify(
+                              data,
+                              null,
+                              2
+                            )}</div>
+                        </div>
+                    `;
+          } else {
+            status.innerHTML = `
+                        <div class="status error">
+                            ❌ Send Error: ${response.status}<br>
+                            <div class="json">${JSON.stringify(
+                              data,
+                              null,
+                              2
+                            )}</div>
+                        </div>
+                    `;
+          }
+        } catch (error) {
+          status.innerHTML = `<div class="status error">❌ Network Error: ${error.message}</div>`;
+        }
+      }
+
+      // Auto-check backend and schema on page load
+      window.onload = function () {
+        checkBackend();
+        checkSchema();
+      };
+    </script>
+  </body>
+</html>
